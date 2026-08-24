@@ -15,6 +15,7 @@ The skills are organized into three main pillars: **Harness Engineering**, **Cod
 ### 🏗️ Harness Engineering
 *Foundation for creating and managing AI agents.*
 - **`create-agent-harness`**: The starting point. Use this to bootstrap a complete agent environment (CLAUDE.md, rules, skills) in any repo.
+- **`create-readme`**: Professionalizes the repository landing page. Generates evidence-based READMEs and SemVer-compliant CHANGELOGs.
 - **`observability-and-instrumentation`**: Once the harness is set, use this to ensure the agent's actions and the application's behavior are visible and diagnosable in production.
 
 ### 💎 Code Quality & Review
