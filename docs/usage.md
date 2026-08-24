@@ -1,6 +1,6 @@
 # Using the Skill
 
-How to drive `drawio-architecture-mcp` once it's configured. This skill is
+How to drive `drawio-architecture` once it's configured. This skill is
 **proactive**: an agent should load it whenever a request implies a diagram
 with 3+ components, complex data flow, or a visual explanation of a system.
 

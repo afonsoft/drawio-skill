@@ -1,6 +1,6 @@
 # Configurando a Skill e o Servidor MCP do draw.io
 
-Este guia explica como integrar a skill `drawio-architecture-mcp` ao seu
+Este guia explica como integrar a skill `drawio-architecture` ao seu
 agente/IDE registrando o servidor MCP oficial do draw.io (`npx @drawio/mcp`).
 
 ## Pré-requisitos

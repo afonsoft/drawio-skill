@@ -1,6 +1,6 @@
 # Usando a Skill
 
-Como conduzir a `drawio-architecture-mcp` após configurada. Esta skill é
+Como conduzir a `drawio-architecture` após configurada. Esta skill é
 **proativa**: o agente deve carregá-la sempre que um pedido implicar um
 diagrama com 3+ componentes, fluxo de dados complexo ou explicação visual de um
 sistema.

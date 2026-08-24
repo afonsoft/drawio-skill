@@ -1,6 +1,6 @@
 # Configuring the Skill & the draw.io MCP Server
 
-This guide explains how to wire the `drawio-architecture-mcp` skill into your
+This guide explains how to wire the `drawio-architecture` skill into your
 agent/IDE by registering the official draw.io MCP server (`npx @drawio/mcp`).
 
 ## Prerequisites
