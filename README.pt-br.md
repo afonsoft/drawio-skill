@@ -36,6 +36,110 @@ Em seguida, diga ao agente para sempre usar as ferramentas MCP:
 *"Always use the draw.io MCP tools to create diagrams."* (use sempre as
 ferramentas MCP do draw.io para criar diagramas).
 
+## Instalação via CLI (use seu marketplace preferido)
+
+### Instale via skills.sh (recomendado)
+
+```bash
+npx skills add afonsoft/drawio-skill
+```
+
+**O que faz:**
+- Detecta automaticamente seu agente/IDE
+- Escreve a config MCP correta (`drawio` entry)
+- Adiciona a skill à lista de skills do seu agente
+- Exibe um badge: `[![skills.sh](https://skills.sh/b/afonsoft/drawio-skill)](https://skills.sh/afonsoft/drawio-skill)`
+
+**Detecção de plataforma:** O skills.sh lê seus diretórios dev (`.claude/skills/`, `.opencode/skills/`, `.cursor/skills/`, etc.) e adiciona a skill ao primeiro que encontrar.
+
+### Instale via Agent Skills (agentskills.io)
+
+Agent Skills é um marketplace curado com controle de qualidade.
+
+```bash
+npx agent-skills add afonsoft/drawio-skill
+```
+
+**O que faz:**
+- Baixa a pasta `skills/drawio-architecture/` deste repo
+- Escreve SKILL.md + references/scripts/docs para `.agents/skills/drawio-architecture/`
+- Compatível com Claude Code, Cursor, OpenCode, Windsurf e outros agentes suportados
+- Inclui documentação detalhada + helpers de configuração MCP
+
+### Instale via SkillsMP (comunidade orientada)
+
+SkillsMP é o maior marketplace de habilidades open-source com 2,000,000+ de habilidades, API e MCP server.
+
+**Duas maneiras:**
+
+**Install CLI (requer skills CLI):**
+```bash
+npx skillsmp add afonsoft/drawio-skill
+```
+
+**Ou via API (para agentes não-CLI):**
+```bash
+curl "https://skillsmp.com/api/v1/skills/install?repo=afonsoft/drawio-skill" \
+  -H "Content-Type: application/json" \
+  | jq .
+```
+
+**O que faz:**
+- Busca metadados da habilidade do agregador GitHub do SkillsMP
+- Adiciona à cache local da habilidade do seu agente
+- Oferece descoberta através de categorias, busca e filtros de ocupação
+- Você também pode usar o [SkillsMP MCP Server](https://skillsmp.com/mcp) para consultar o catálogo
+
+### Alternativa: URL GitHub direta (CLI ou MCP server)
+
+Se você tem um servidor MCP ou CLI customizado que aceita URLs GitHub:
+
+```bash
+# CLI versions:
+npx @your-cli add https://github.com/afonsoft/drawio-skill
+
+# Alguns agentes aceitam URLs GitHub diretamente
+# Exemplo com Claude Code:
+claude mcp add drawio-skill https://github.com/afonsoft/drawio-skill
+```
+
+### Verifique a instalação
+
+**skills.sh:**
+```bash
+npx skills list
+exibe as habilidades instaladas
+```
+
+**Agent Skills:**
+```bash
+ls -la ~/.agents/skills/drawio-architecture/
+# Deve conter SKILL.md, scripts/, references/, docs/
+```
+
+**SkillsMP:**
+```bash
+curl "https://skillsmp.com/api/v1/skills/search?q=drawio-architecture&repo=afonsoft/drawio-skill"
+```
+
+### Solução de problemas comuns
+
+| Sintoma | Causa | Solução |
+|---------|-------|-----|
+| Agente não vê habilidade | Diretório de habilidade errado para agente | Use `skills.sh add` (detectar) ou verifique `.claude/skills/` / `.opencode/skills/` |
+| MCP não funcionando | Arquivo de config não recarregado | Reinicie o agente/IDE |
+| Habilidade parece quebrada | Frontmatter inválido | Execute `npx skills lint afonsoft/drawio-skill` |
+| Badge ausente no README | Badge não atualizado | Execute `npx skills badge afonsoft/drawio-skill >> README.md` |
+
+### Escolha sua plataforma
+
+- **skills.sh** → Melhor para: Telemetria, leaderboards, detecção automática, instalação rápida
+- **Agent Skills** → Melhor para: Controle de qualidade, compatibilidade de agentes, documentação estruturada
+- **SkillsMP** → Melhor para: Descoberta, acesso à API, contribuições da comunidade
+- **GitHub direto** → Melhor para: Instalações offline, CLIs customizados
+
+Você pode misturar — instale via skills.sh para configuração rápida, depois complemente com descoberta SkillsMP.
+
 ## Plataformas suportadas (config MCP)
 
 | Agente / IDE | Target | Arquivo de config |
