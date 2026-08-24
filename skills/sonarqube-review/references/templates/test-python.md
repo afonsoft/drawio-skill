@@ -1,4 +1,4 @@
-# Template de Teste Python (pytest)
+# Python Test Template (pytest)
 
 ```python
 import pytest
@@ -27,10 +27,10 @@ class TestExampleClass:
         mock_dependency.get_value.assert_called_once()
 ```
 
-## Padrões
+## Patterns
 
 - Use pytest
-- Use unittest.mock para mocks
+- Use unittest.mock for mocks
 - Given-When-Then pattern
-- Verifique todas as chamadas de mocks
-- Use fixtures para setup
+- Verify all mock calls
+- Use fixtures for setup

@@ -1,59 +1,59 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script de validação para Angular
-# Executa linting, testes e formatação para projetos Angular
+# Validation script for Angular
+# Runs linting, tests and formatting for Angular projects
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$PROJECT_ROOT"
 
-echo "🔍 Validando projeto Angular..."
+echo "🔍 Validating Angular project..."
 
-# Verificar se é um projeto Angular
+# Check if it is an Angular project
 if [ ! -f "angular.json" ] && [ ! -f "angular-cli.json" ]; then
-    echo "❌ Erro: Não é um projeto Angular (angular.json não encontrado)"
+    echo "❌ Error: Not an Angular project (angular.json not found)"
     exit 1
 fi
 
 # Linting
-echo "🔧 Executando ng lint..."
+echo "🔧 Running ng lint..."
 if command -v ng &> /dev/null; then
     ng lint || {
-        echo "❌ Erro: ng lint falhou"
+        echo "❌ Error: ng lint failed"
         exit 1
     }
 else
-    echo "⚠️  ng não encontrado, tentando eslint..."
+    echo "⚠️  ng not found, trying eslint..."
     npx eslint src/ || {
-        echo "❌ Erro: eslint falhou"
+        echo "❌ Error: eslint failed"
         exit 1
     }
 fi
 
-# Formatação com Prettier
-echo "✨ Formatando código com Prettier..."
+# Formatting with Prettier
+echo "✨ Formatting code with Prettier..."
 npx prettier --write src/ || {
-    echo "⚠️  Aviso: Prettier falhou, continuando..."
+    echo "⚠️  Warning: Prettier failed, continuing..."
 }
 
-# Formatação com ESLint --fix
-echo "✨ Formatando código com ESLint..."
+# Formatting with ESLint --fix
+echo "✨ Formatting code with ESLint..."
 npx eslint --fix src/ || {
-    echo "⚠️  Aviso: ESLint --fix falhou, continuando..."
+    echo "⚠️  Warning: ESLint --fix failed, continuing..."
 }
 
-# Testes com cobertura
-echo "🧪 Executando testes com cobertura..."
+# Tests with coverage
+echo "🧪 Running tests with coverage..."
 ng test --code-coverage --watch=false || {
-    echo "❌ Erro: ng test falhou"
+    echo "❌ Error: ng test failed"
     exit 1
 }
 
-# Build para validação
-echo "🏗️  Executando build para validação..."
+# Build for validation
+echo "🏗️  Running build for validation..."
 ng build --configuration=production || {
-    echo "❌ Erro: ng build falhou"
+    echo "❌ Error: ng build failed"
     exit 1
 }
 
-echo "✅ Validação Angular concluída com sucesso"
+echo "✅ Angular validation completed successfully"

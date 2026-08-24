@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script de validação para Scala
-# Executa Scalastyle, Scapegoat e sbt test
+# Validation script for Scala
+# Runs Scalastyle, Scapegoat and sbt test
 
-echo "Validando Scala..."
+echo "Validating Scala..."
 
 # Scalastyle
 sbt scalastyle
@@ -12,7 +12,7 @@ sbt scalastyle
 # Scapegoat
 sbt scapegoat
 
-# sbt test (testes com cobertura)
+# sbt test (tests with coverage)
 sbt clean coverage test coverageReport
 
-echo "Validação Scala concluída."
+echo "Scala validation completed."

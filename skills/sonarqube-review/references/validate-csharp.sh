@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script de validação para C#/.NET
-# Executa Roslyn Analyzers, dotnet format e dotnet test
+# Validation script for C#/.NET
+# Runs Roslyn Analyzers, dotnet format and dotnet test
 
-echo "Validando C#/.NET..."
+echo "Validating C#/.NET..."
 
 # Roslyn Analyzers
 dotnet build /p:RunAnalyzersDuringBuild=true
@@ -12,7 +12,7 @@ dotnet build /p:RunAnalyzersDuringBuild=true
 # dotnet format (formatter)
 dotnet format --verify-no-changes
 
-# dotnet test (testes com cobertura)
+# dotnet test (tests with coverage)
 dotnet test /p:CollectCoverage=true /p:CoverageFormat=cobertura
 
-echo "Validação C#/.NET concluída."
+echo "C#/.NET validation completed."

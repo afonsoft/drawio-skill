@@ -1,4 +1,4 @@
-# Template de Teste Ruby (RSpec)
+# Ruby Test Template (RSpec)
 
 ```ruby
 require 'rspec'
@@ -24,10 +24,10 @@ RSpec.describe ExampleClass do
 end
 ```
 
-## Padrões
+## Patterns
 
 - Use RSpec
-- Use double para mocks
+- Use double for mocks
 - Given-When-Then pattern
-- Verifique todas as chamadas de mocks
-- Use let para setup lazy
+- Verify all mock calls
+- Use let for lazy setup

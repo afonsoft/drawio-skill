@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script de validação para PHP
-# Executa PHPStan, PHP CS Fixer e phpunit
+# Validation script for PHP
+# Runs PHPStan, PHP CS Fixer and phpunit
 
-echo "Validando PHP..."
+echo "Validating PHP..."
 
 # PHPStan
 vendor/bin/phpstan analyse
@@ -12,7 +12,7 @@ vendor/bin/phpstan analyse
 # PHP CS Fixer (formatter)
 vendor/bin/php-cs-fixer fix --dry-run
 
-# phpunit (testes com cobertura)
+# phpunit (tests with coverage)
 vendor/bin/phpunit --coverage-clover=coverage.xml
 
-echo "Validação PHP concluída."
+echo "PHP validation completed."

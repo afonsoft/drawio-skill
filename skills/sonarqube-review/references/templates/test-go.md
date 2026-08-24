@@ -1,4 +1,4 @@
-# Template de Teste Go
+# Go Test Template
 
 ```go
 package example_test
@@ -33,10 +33,10 @@ func TestExampleMethod(t *testing.T) {
 }
 ```
 
-## Padrões
+## Patterns
 
 - Use testing
-- Use testify/mock para mocks
-- Use testify/assert para asserções
+- Use testify/mock for mocks
+- Use testify/assert for assertions
 - Given-When-Then pattern
-- Verifique todas as chamadas de mocks
+- Verify all mock calls

@@ -1,39 +1,39 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script para executar SonarQube localmente e revalidar correções
-# Uso: bash sonar-local-scan.sh [project-key]
+# Script to run SonarQube locally and revalidate fixes
+# Usage: bash sonar-local-scan.sh [project-key]
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-# Detectar project key
+# Detect project key
 PROJECT_KEY="${1:-}"
 if [ -z "$PROJECT_KEY" ]; then
-    # Tentar extrair do sonar-project.properties
+    # Try to extract from sonar-project.properties
     if [ -f "$PROJECT_ROOT/sonar-project.properties" ]; then
         PROJECT_KEY=$(grep "^sonar.projectKey=" "$PROJECT_ROOT/sonar-project.properties" | cut -d'=' -f2)
     fi
-    # Se ainda não tiver, usar nome da pasta
+    # If still not found, use the folder name
     if [ -z "$PROJECT_KEY" ]; then
         PROJECT_KEY=$(basename "$PROJECT_ROOT")
     fi
 fi
 
-echo "🔍 Executando SonarQube scan local para projeto: $PROJECT_KEY"
-echo "📂 Diretório do projeto: $PROJECT_ROOT"
+echo "🔍 Running local SonarQube scan for project: $PROJECT_KEY"
+echo "📂 Project directory: $PROJECT_ROOT"
 
-# Verificar se sonar-scanner está instalado
+# Check if sonar-scanner is installed
 if ! command -v sonar-scanner &> /dev/null; then
-    echo "❌ Erro: sonar-scanner não está instalado"
-    echo "📖 Instale em: https://docs.sonarsource.com/sonarqube-server/latest/analyzing-source-code/scanners/sonarscanner/"
-    echo "   Ou rode ./install-skill-tools.sh --sonar neste repositório."
+    echo "❌ Error: sonar-scanner is not installed"
+    echo "📖 Install at: https://docs.sonarsource.com/sonarqube-server/latest/analyzing-source-code/scanners/sonarscanner/"
+    echo "   Or run ./install-skill-tools.sh --sonar in this repository."
     exit 1
 fi
 
-# Criar sonar-project.properties se não existir
+# Create sonar-project.properties if it does not exist
 if [ ! -f "$PROJECT_ROOT/sonar-project.properties" ]; then
-    echo "📝 Criando sonar-project.properties..."
+    echo "📝 Creating sonar-project.properties..."
     cat > "$PROJECT_ROOT/sonar-project.properties" << EOF
 sonar.projectKey=$PROJECT_KEY
 sonar.sources=src
@@ -43,7 +43,7 @@ sonar.coverage.exclusions=**/*Tests.cs,**/Program.cs,**/Startup.cs,**/AssemblyIn
 EOF
 fi
 
-# Detectar stack e configurar relatórios de cobertura
+# Detect stack and configure coverage reports
 if [ -f "$PROJECT_ROOT/package.json" ]; then
     # JavaScript/TypeScript/Angular
     echo "sonar.javascript.lcov.reportPaths=coverage/lcov.info" >> "$PROJECT_ROOT/sonar-project.properties"
@@ -56,13 +56,13 @@ elif [ -f "$PROJECT_ROOT/.csproj" ] || [ -f "$PROJECT_ROOT/*.sln" ]; then
     echo "sonar.cs.vscoveragexml.reportPaths=coverage.xml" >> "$PROJECT_ROOT/sonar-project.properties"
 fi
 
-# Executar scan
-echo "🚀 Executando sonar-scanner..."
+# Run scan
+echo "🚀 Running sonar-scanner..."
 cd "$PROJECT_ROOT"
 sonar-scanner \
     -Dsonar.projectKey="$PROJECT_KEY" \
     -Dsonar.host.url="http://localhost:9000" \
     -Dsonar.login="${SONAR_TOKEN:-admin}"
 
-echo "✅ Scan concluído"
-echo "🌐 Acesse: http://localhost:9000/dashboard?id=$PROJECT_KEY"
+echo "✅ Scan completed"
+echo "🌐 Open: http://localhost:9000/dashboard?id=$PROJECT_KEY"

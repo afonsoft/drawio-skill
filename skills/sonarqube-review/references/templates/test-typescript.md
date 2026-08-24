@@ -1,4 +1,4 @@
-# Template de Teste TypeScript (Jest)
+# TypeScript Test Template (Jest)
 
 ```typescript
 import { ExampleClass } from './example';
@@ -28,10 +28,10 @@ describe('ExampleClass', () => {
 });
 ```
 
-## Padrões
+## Patterns
 
-- Use Jest com TypeScript
-- Use jest.Mocked para type safety
+- Use Jest with TypeScript
+- Use jest.Mocked for type safety
 - Given-When-Then pattern
-- Verifique todas as chamadas de mocks
-- Use beforeEach para setup
+- Verify all mock calls
+- Use beforeEach for setup

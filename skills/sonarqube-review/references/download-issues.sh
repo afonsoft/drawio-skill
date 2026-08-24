@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Download de issues do SonarQube com detecção automática de edição
-# ⚠️ SEGURANÇA: Este script usa variáveis de ambiente diretamente no bash.
-# NUNCA inspecione ou print o valor de $SONAR_TOKEN ou outras variáveis de token.
-# O bash expande as variáveis automaticamente - você não precisa (e não deve) ler seus valores.
+# Download SonarQube issues with automatic edition detection
+# ⚠️ SECURITY: This script uses environment variables directly in bash.
+# NEVER inspect or print the value of $SONAR_TOKEN or other token variables.
+# Bash expands variables automatically - you do not need (and must not) read their values.
 
 PROJECT_NAME="${1:-}"
 ISSUES_CSV="${2:-}"
@@ -15,28 +15,28 @@ error_exit() {
   exit 1
 }
 
-[ -n "$PROJECT_NAME" ] || error_exit "PROJECT_NAME não fornecido."
+[ -n "$PROJECT_NAME" ] || error_exit "PROJECT_NAME not provided."
 
-# Detectar edição e construir URL dinâmica
+# Detect edition and build dynamic URL
 if [ -n "${SONARQUBE_CUSTOM_URL:-}" ]; then
   SONAR_BASE_URL="$SONARQUBE_CUSTOM_URL"
   SONAR_TOKEN="${SONARQUBE_CUSTOM_TOKEN:-}"
   SONAR_EDITION="${SONARQUBE_CUSTOM_EDITION:-open}"
 elif [ -n "${SONARQUBE_ENTERPRISE_TOKEN:-}" ]; then
-  [ -n "${SONARQUBE_ENTERPRISE_URL:-}" ] || error_exit "SONARQUBE_ENTERPRISE_URL não configurada."
+  [ -n "${SONARQUBE_ENTERPRISE_URL:-}" ] || error_exit "SONARQUBE_ENTERPRISE_URL not configured."
   SONAR_BASE_URL="$SONARQUBE_ENTERPRISE_URL"
   SONAR_TOKEN="$SONARQUBE_ENTERPRISE_TOKEN"
   SONAR_EDITION="enterprise"
 elif [ -n "${SONARQUBE_OPEN_TOKEN:-}" ] || [ -n "${SONAR_TK:-}" ]; then
-  [ -n "${SONARQUBE_OPEN_URL:-}" ] || error_exit "SONARQUBE_OPEN_URL não configurada."
+  [ -n "${SONARQUBE_OPEN_URL:-}" ] || error_exit "SONARQUBE_OPEN_URL not configured."
   SONAR_BASE_URL="$SONARQUBE_OPEN_URL"
   SONAR_TOKEN="${SONARQUBE_OPEN_TOKEN:-$SONAR_TK}"
   SONAR_EDITION="open"
 else
-  error_exit "Nenhuma configuração de SonarQube encontrada. Defina SONARQUBE_CUSTOM_URL, ou SONARQUBE_ENTERPRISE_TOKEN + SONARQUBE_ENTERPRISE_URL, ou SONARQUBE_OPEN_TOKEN/SONAR_TK + SONARQUBE_OPEN_URL."
+  error_exit "No SonarQube configuration found. Set SONARQUBE_CUSTOM_URL, or SONARQUBE_ENTERPRISE_TOKEN + SONARQUBE_ENTERPRISE_URL, or SONARQUBE_OPEN_TOKEN/SONAR_TK + SONARQUBE_OPEN_URL."
 fi
 
-# Detectar branch para edições Enterprise/Custom enterprise
+# Detect branch for Enterprise/Custom enterprise editions
 if [ "$SONAR_EDITION" = "enterprise" ]; then
   CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "")
   if [ -n "$CURRENT_BRANCH" ]; then
@@ -48,9 +48,9 @@ else
   BRANCH_PARAM=""
 fi
 
-# Construir URL da API
+# Build API URL
 if [ -n "$ISSUES_CSV" ]; then
-  # Baixar issues específicas por CSV
+  # Download specific issues by CSV
   IFS=',' read -ra ISSUE_IDS <<< "$ISSUES_CSV"
   ISSUES_PARAM=""
   for id in "${ISSUE_IDS[@]}"; do
@@ -58,7 +58,7 @@ if [ -n "$ISSUES_CSV" ]; then
   done
   API_URL="${SONAR_BASE_URL}/api/issues/search?resolved=false&components=${PROJECT_NAME}${ISSUES_PARAM}${BRANCH_PARAM}"
 else
-  # Baixar todas as issues não resolvidas
+  # Download all unresolved issues
   API_URL="${SONAR_BASE_URL}/api/issues/search?resolved=false&components=${PROJECT_NAME}"
 
   if [ "$NEW_CODE_ONLY" = "true" ]; then
@@ -68,7 +68,7 @@ else
   API_URL="${API_URL}${BRANCH_PARAM}"
 fi
 
-# Baixar issues
+# Download issues
 AUTH_HEADER=""
 if [ -n "$SONAR_TOKEN" ]; then
   AUTH_HEADER="Authorization: Bearer $SONAR_TOKEN"

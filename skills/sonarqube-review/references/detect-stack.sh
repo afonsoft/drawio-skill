@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script para detectar automaticamente a stack do projeto
-# Saída: STACK, BUILD_TOOL, TEST_FRAMEWORK, COVERAGE_TOOL
+# Script to automatically detect the project stack
+# Output: STACK, BUILD_TOOL, TEST_FRAMEWORK, COVERAGE_TOOL
 
 if [ -f "pom.xml" ]; then
   echo "STACK=java"

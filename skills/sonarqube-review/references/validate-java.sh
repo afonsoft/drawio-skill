@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script de validação para Java/Kotlin
-# Executa Checkstyle, PMD, Spotless e JaCoCo
+# Validation script for Java/Kotlin
+# Runs Checkstyle, PMD, Spotless and JaCoCo
 
-echo "Validando Java/Kotlin..."
+echo "Validating Java/Kotlin..."
 
 # Checkstyle
 if [ -f "pom.xml" ]; then
@@ -34,4 +34,4 @@ elif [ -f "build.gradle" ] || [ -f "build.gradle.kts" ]; then
   gradle --gradle-user-home ./.gradle jacocoTestCoverageVerification
 fi
 
-echo "Validação Java/Kotlin concluída."
+echo "Java/Kotlin validation completed."

@@ -1,12 +1,13 @@
 ---
 name: building-mcp-servers
 license: UNLICENSED
-description: Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in TypeScript (MCP SDK), Python (FastMCP), or C# (ModelContextProtocol.AspNetCore).
+description: Use when building MCP (Model Context Protocol) servers that let LLMs call external APIs or services, in TypeScript (MCP SDK), Python (FastMCP), or C# (ModelContextProtocol.AspNetCore). Covers tool design, transports (Streamable HTTP/stdio), OAuth 2.1 auth, and evaluations. Do NOT use for consuming or configuring an existing MCP server, or for non-MCP API integrations.
 author: afonsoft
 url: https://github.com/afonsoft/skills
 metadata:
   version: "1.1.0"
   visibility: public
+  author: afonsoft
 ---
 
 # MCP Server Development Guide
@@ -331,8 +332,6 @@ const server = new McpServer({
 // Tool
 server.registerTool("add", {
   description: "Add two numbers",
-author: afonsoft
-url: https://github.com/afonsoft/skills
   inputSchema: { a: z.number(), b: z.number() }
 }, async ({ a, b }) => ({
   content: [{ type: "text", text: String(a + b) }]
@@ -343,8 +342,6 @@ server.registerResource(
   "config",
   "config://app",
   { description: "App configuration" },
-author: afonsoft
-url: https://github.com/afonsoft/skills
   async (uri) => ({
     contents: [{ uri: uri.href, text: JSON.stringify({ env: "prod" }) }]
   })
@@ -353,8 +350,6 @@ url: https://github.com/afonsoft/skills
 // Prompt
 server.registerPrompt("review", {
   description: "Code review",
-author: afonsoft
-url: https://github.com/afonsoft/skills
   argsSchema: { code: z.string() }
 }, ({ code }) => ({
   messages: [{ role: "user", content: { type: "text", text: `Review:\n${code}` } }]

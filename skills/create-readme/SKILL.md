@@ -1,11 +1,13 @@
 ---
 name: create-readme
-description: Use when generating or updating professional README.md and CHANGELOG.md files for a project. Covers repository analysis, stack detection, and alignment with Keep a Changelog and SemVer standards.
+license: UNLICENSED
+description: Use when generating or updating professional README.md and CHANGELOG.md files for a project. Covers repository analysis, stack detection, and alignment with Keep a Changelog and SemVer standards. Do NOT use for API-reference docs (use dedicated doc tooling) or for licenses/governance documents.
 author: afonsoft
 url: https://github.com/afonsoft/skills
 metadata:
   version: "1.0.0"
   visibility: public
+  author: afonsoft
 ---
 
 # Create README and CHANGELOG
@@ -48,7 +50,7 @@ Generate the README following this strict order:
 **Rules**:
 - Reuse existing content where applicable.
 - Only include sections where concrete evidence exists.
-- Default to Portuguese (pt-BR) unless the repo is strictly English.
+- Default to English (en-us) to match the skill catalog; only use another language if the repository's existing documentation is consistently written in that language.
 
 ### Phase 3: CHANGELOG.md Authoring
 Follow the [Keep a Changelog](https://keepachangelog.com/) and [SemVer](https://semver.org/) standards:

@@ -1,4 +1,4 @@
-# Template de Teste Scala (ScalaTest + Mockito)
+# Scala Test Template (ScalaTest + Mockito)
 
 ```scala
 import org.scalatest.flatspec.AnyFlatSpec
@@ -24,10 +24,10 @@ class ExampleClassSpec extends AnyFlatSpec with Matchers with MockitoSugar {
 }
 ```
 
-## Padrões
+## Patterns
 
 - Use ScalaTest
-- Use Mockito para mocks
+- Use Mockito for mocks
 - Given-When-Then pattern
-- Verifique todas as chamadas de mocks
-- Use shouldMatchers para asserções
+- Verify all mock calls
+- Use shouldMatchers for assertions

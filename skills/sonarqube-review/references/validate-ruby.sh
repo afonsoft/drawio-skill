@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script de validação para Ruby
-# Executa RuboCop, Rufo e rspec
+# Validation script for Ruby
+# Runs RuboCop, Rufo and rspec
 
-echo "Validando Ruby..."
+echo "Validating Ruby..."
 
 # RuboCop
 bundle exec rubocop
@@ -12,7 +12,7 @@ bundle exec rubocop
 # Rufo (formatter)
 bundle exec rufo --check .
 
-# rspec (testes com cobertura)
+# rspec (tests with coverage)
 bundle exec rspec --coverage
 
-echo "Validação Ruby concluída."
+echo "Ruby validation completed."

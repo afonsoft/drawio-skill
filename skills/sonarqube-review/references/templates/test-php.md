@@ -1,4 +1,4 @@
-# Template de Teste PHP (PHPUnit)
+# PHP Test Template (PHPUnit)
 
 ```php
 <?php
@@ -35,10 +35,10 @@ class ExampleClassTest extends TestCase
 }
 ```
 
-## Padrões
+## Patterns
 
 - Use PHPUnit
-- Use createMock para mocks
+- Use createMock for mocks
 - Given-When-Then pattern
-- Verifique todas as chamadas de mocks
-- Use setUp para setup
+- Verify all mock calls
+- Use setUp for setup

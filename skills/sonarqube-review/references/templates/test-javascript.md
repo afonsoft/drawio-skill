@@ -1,4 +1,4 @@
-# Template de Teste JavaScript (Jest)
+# JavaScript Test Template (Jest)
 
 ```javascript
 const { ExampleClass } = require('./example');
@@ -28,10 +28,10 @@ describe('ExampleClass', () => {
 });
 ```
 
-## Padrões
+## Patterns
 
 - Use Jest
-- Use jest.fn() para mocks
+- Use jest.fn() for mocks
 - Given-When-Then pattern
-- Verifique todas as chamadas de mocks
-- Use beforeEach para setup
+- Verify all mock calls
+- Use beforeEach for setup

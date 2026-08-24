@@ -1,8 +1,13 @@
 ---
 name: observability-and-instrumentation
-description: Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works. Use when production issues are reported but you can't tell what happened from the available data.
+license: UNLICENSED
+description: Use when adding logging, metrics, tracing, or alerting to code that runs in production, or when a production incident couldn't be diagnosed from available data. Makes system behavior visible and diagnosable. Do NOT use for live debugging of an ongoing failure (use debugging-and-error-recovery), profiling/optimization (use performance-optimization), or launch-day monitoring checklists (use shipping-and-launch).
 author: afonsoft
 url: https://github.com/afonsoft/skills
+metadata:
+  version: "1.0.0"
+  visibility: public
+  author: afonsoft
 ---
 
 # Observability and Instrumentation

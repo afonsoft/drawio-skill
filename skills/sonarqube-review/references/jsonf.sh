@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script para formatar JSON com indentação
-# Uso: jsonf <arquivo.json>
+# Script to format JSON with indentation
+# Usage: jsonf <file.json>
 
 jsonf(){
   f=$1

@@ -7,15 +7,16 @@ url: https://github.com/afonsoft/skills
 user-invokable: true
 argument-hint: "[repo-path]"
 metadata:
-  version: '1.1.0'
+  version: "1.1.0"
   visibility: public
+  author: afonsoft
 ---
 
 # Create Agent Harness
 
 Generate a production-ready harness for AI agents (**Claude Code** and **Devin CLI** only) in a target repository. The harness is everything the model can't do alone.
 
-> Escopo desta skill: **somente** Claude Code e Devin CLI. Não gere artefatos para OpenCode, Cursor, Gemini CLI, GitHub Copilot ou JetBrains AI — esses agentes estão fora do escopo.
+> Scope of this skill: **only** Claude Code and Devin CLI. Do not generate artifacts for OpenCode, Cursor, Gemini CLI, GitHub Copilot, or JetBrains AI — those agents are out of scope.
 
 ## Core Principle
 
@@ -356,11 +357,11 @@ docs/
 1. Consult the relevant `docs/` files before implementing changes
 2. Update the `docs/` files after implementing changes to keep documentation current
 
-### M. `.claude/agents/` — Sub-Agents (OBRIGATÓRIO)
+### M. `.claude/agents/` — Sub-Agents (REQUIRED)
 
-> **OBRIGATÓRIO.** Criar sempre três sub-agentes especializados: **Review**, **Plan** e **Test**, em `.claude/agents/{nome}.md`. Cada sub-agent deve ser especializado de acordo com a stack e convenções do repositório analisado.
+> **REQUIRED.** Always create three specialized sub-agents: **Review**, **Plan**, and **Test**, in `.claude/agents/{name}.md`. Each sub-agent must be specialized according to the analyzed repository's stack and conventions.
 
-> **Estrutura unificada:** Claude Code **e** Devin CLI compartilham a **mesma pasta e o mesmo formato** de sub-agent (`.claude/agents/`). Não há tradução por plataforma nem duplicação — um único arquivo por sub-agent serve aos dois.
+> **Unified structure:** Claude Code **and** Devin CLI share the **same folder and the same sub-agent format** (`.claude/agents/`). There is no per-platform translation or duplication — a single file per sub-agent serves both.
 
 Sub-agents apply `Agent = Model + Harness` at finer granularity — reduced scope, isolated context, restricted permissions.
 
@@ -380,26 +381,26 @@ name: review
 description: >
 author: afonsoft
 url: https://github.com/afonsoft/skills
-  Use PROACTIVELY to review code and PRs. Aciona ao concluir mudanças,
-  validar aderência a padrões e detectar problemas de qualidade, segurança
-  e performance. Especializado na stack do repositório.
+  Use PROACTIVELY to review code and PRs. Trigger after changes land,
+  validate adherence to standards, and detect quality, security,
+  and performance problems. Specialized in the repository's stack.
 tools: Read, Grep, Glob
 model: inherit
 ---
 
-## Missão
+## Mission
 [Review mission specific to the repo's stack]
 ```
 
 **Design principles:** Single Responsibility, Context Isolation, Structured I/O, Tool Minimization, Bounded Execution, internal Feedforward/Feedback loops.
 
-### N. `.devin/config.json` — Devin CLI Configuration (OBRIGATÓRIO)
+### N. `.devin/config.json` — Devin CLI Configuration (REQUIRED)
 
-> **OBRIGATÓRIO.** Criar sempre o arquivo `.devin/config.json` para habilitar o Devin CLI a ler a configuração do Claude Code.
+> **REQUIRED.** Always create the `.devin/config.json` file to enable Devin CLI to read the Claude Code configuration.
 
 ```jsonc
 {
-  // Importação de configs do Claude Code (OBRIGATÓRIO)
+  // Import Claude Code configs (REQUIRED)
   "read_config_from": {
     "claude": true
   },
@@ -412,7 +413,7 @@ model: inherit
     ]
   },
   "hooks": {
-    // bloquear push para branches protegidas (glob não parseia branch)
+    // block push to protected branches (glob does not parse branch)
     "PreToolUse": [
       { "matcher": "Exec", "command": "bash .devin/hooks/block-protected-push.sh" }
     ]
@@ -420,7 +421,7 @@ model: inherit
 }
 ```
 
-> ⚠️ **`read_config_from: { claude: true }` é OBRIGATÓRIO** — sem isso, o Devin CLI não importará as rules, skills e subagents do Claude Code.
+> ⚠️ **`read_config_from: { claude: true }` is REQUIRED** — without it, Devin CLI will not import Claude Code's rules, skills, and subagents.
 
 ## Step 3 — Agent Loop
 
@@ -461,7 +462,7 @@ Define in CLAUDE.md. Choose pattern adapted to the repo:
 | Verbose feedback | Filter to summary lines |
 | Duplicated info across files | Reference, don't copy |
 | `AGENTS.md` created | Remove — Devin reads CLAUDE.md natively |
-| `GEMINI.md` / `.cursorrules` / `.geminiignore` / `.cursorignore` / `.aiignore` / `.opencodeignore` criados | Remover — fora do escopo (OpenCode, Cursor, Gemini, JetBrains não são suportados aqui) |
+| `GEMINI.md` / `.cursorrules` / `.geminiignore` / `.cursorignore` / `.aiignore` / `.opencodeignore` created | Remove — out of scope (OpenCode, Cursor, Gemini, JetBrains are not supported here) |
 
 ### Quality Checklist
 
@@ -485,8 +486,8 @@ When complete, list all generated artifacts grouped by location:
 ## Generated Artifacts
 
 ### Root
-- [ ] CLAUDE.md (SSoT, ≤500 lines) — lido por Claude Code e Devin CLI nativamente
-- [ ] .claude/settings.json (permissões, hooks)
+- [ ] CLAUDE.md (SSoT, ≤500 lines) — read natively by Claude Code and Devin CLI
+- [ ] .claude/settings.json (permissions, hooks)
 - [ ] .devin/config.json (read_config_from: { claude: true })
 
 ### docs/
@@ -498,53 +499,53 @@ When complete, list all generated artifacts grouped by location:
 - [ ] api.md — API documentation (if applicable)
 
 ### .claude/
-- [ ] settings.json (permissões, hooks)
+- [ ] settings.json (permissions, hooks)
 - [ ] rules/global-rules.md (always-on)
-- [ ] rules/{domain}.md (path-scoped com `paths:`)
-- [ ] agents/review.md (sub-agent de revisão)
-- [ ] agents/plan.md (sub-agent de planejamento)
-- [ ] agents/test.md (sub-agent de testes)
+- [ ] rules/{domain}.md (path-scoped with `paths:`)
+- [ ] agents/review.md (review sub-agent)
+- [ ] agents/plan.md (planning sub-agent)
+- [ ] agents/test.md (test sub-agent)
 - [ ] skills/{domain}/SKILL.md
-- [ ] knowledge/{domain}.md (opcional)
+- [ ] knowledge/{domain}.md (optional)
 
 ### .devin/
 - [ ] config.json (read_config_from: { claude: true })
-- [ ] hooks/block-protected-push.sh (opcional, para branch protection)
+- [ ] hooks/block-protected-push.sh (optional, for branch protection)
 ```
 
 ## Additional Requirements
 
-### Hard Rules (Bloqueio Imediato)
+### Hard Rules (Immediate Block)
 
-**Branches protegidas** — proibido push/commit direto:
+**Protected branches** — direct push/commit forbidden:
 - `main`
 - `master`
 - `develop`
 
-**Workflows protegidos** — proibido modificar:
+**Protected workflows** — modification forbidden:
 - `/.github/workflows`
 
-### Estratégia de Branch (Obrigatória)
+### Branch Strategy (Required)
 
-Toda alteração deve ocorrer em branch dedicada.
+Every change must occur on a dedicated branch.
 
-**Padrão de nomenclatura:**
+**Naming convention:**
 ```
-feature/{AgentLLM}-{data-juliana}-{descricao-curta}
+feature/{AgentLLM}-{date}-{short-description}
 ```
 
-**Regras:**
-- `data-juliana` = YYYYMMDD
-- `descricao-curta` em inglês, kebab-case
-- `AgentLLM` = nome do agent/LLM (devin, copilot, cursor)
-- Branch baseada em `main` ou `master`
+**Rules:**
+- `date` = YYYYMMDD
+- `short-description` → `short-description` in English, kebab-case
+- `AgentLLM` = agent/LLM name (devin, copilot, cursor)
+- Branch based on `main` or `master`
 
-### Execution Plan (Obrigatório)
+### Execution Plan (Required)
 
-Antes de qualquer modificação, apresentar plano:
+Before any modification, present a plan:
 
-**Claude Code:** Use `/plan` antes de executar (ativa Plan Mode para multi-arquivo).
-**Devin CLI:** Use sub-agent `.claude/agents/plan.md` para planejamento.
+**Claude Code:** Use `/plan` before executing (activates Plan Mode for multi-file changes).
+**Devin CLI:** Use the `.claude/agents/plan.md` sub-agent for planning.
 
 ```
 Execution Plan:
@@ -557,11 +558,11 @@ Execution Plan:
 
 ### Multi-Agent
 
-**Sempre que possível, use multi-agent:**
-- Tarefas independentes → Dispatch agentes em paralelo (um por domínio)
-- Revisão de código → Sub-agent reviewer com contexto isolado
-- Planejamento complexo → Sub-agent planner antes de execução
-- Testes → Sub-agent especializado em testes
+**Use multi-agent whenever possible:**
+- Independent tasks → dispatch parallel agents (one per domain)
+- Code review → isolated-context reviewer sub-agent
+- Complex planning → planner sub-agent before execution
+- Testing → testing-specialized sub-agent
 
 ## When to use related skills
 
@@ -588,4 +589,4 @@ Execution Plan:
 - [GitHub Agentic Workflows](https://github.com/github/gh-aw)
 - [Awesome Harness Engineering](https://github.com/walkinglabs/awesome-harness-engineering)
 
-> **Instrução para o LLM:** Consulte estas referências quando necessário para alinhar com as convenções da comunidade e fazer ajustes no repositório. Use-as como guia para melhores práticas de harness engineering e para manter-se atualizado com as evoluções das plataformas.
+> **Instruction for the LLM:** Consult these references when needed to align with community conventions and adjust the repository. Use them as a guide for harness engineering best practices and to stay current with platform evolution.

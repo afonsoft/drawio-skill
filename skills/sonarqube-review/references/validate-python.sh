@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script de validação para Python
-# Executa Pylint, Flake8, Black e pytest
+# Validation script for Python
+# Runs Pylint, Flake8, Black and pytest
 
-echo "Validando Python..."
+echo "Validating Python..."
 
 # Pylint
 python -m pylint src/
@@ -15,7 +15,7 @@ python -m flake8 src/
 # Black (formatter)
 python -m black --check src/
 
-# pytest (testes com cobertura)
+# pytest (tests with coverage)
 python -m pytest --cov=src tests/ -v
 
-echo "Validação Python concluída."
+echo "Python validation completed."

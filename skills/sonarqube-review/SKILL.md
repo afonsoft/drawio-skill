@@ -14,53 +14,54 @@ metadata:
 
 # SonarQube Review Skill
 
-## Objetivo
-Corrigir automaticamente as issues reportadas pelo SonarQube, **independentemente da linguagem ou framework**, seguindo um processo estruturado com:
-- Análise de issues
-- Checklist de correções
-- Testes unitários e cobertura (agnóstico de stack)
-- Documentação de revisão
-- Atualização do .gitignore
+## Purpose
 
-## ⚙️ Configuração de Variáveis de Ambiente
+Automatically fix issues reported by SonarQube, **regardless of language or framework**, following a structured process with:
+- Issue analysis
+- Fix checklist
+- Unit tests and coverage (stack-agnostic)
+- Review documentation
+- .gitignore update
 
-A skill suporta múltiplas edições do SonarQube através de variáveis de ambiente. A detecção é automática baseada na disponibilidade das variáveis (em ordem de prioridade):
+## ⚙️ Environment Variable Configuration
 
-> **⚠️ IMPORTANTE:** Por segurança, NUNCA leia, print ou inspecione o valor de variáveis de ambiente que contenham tokens. O máximo que você pode saber é em qual variável o token está armazenado. Use as variáveis diretamente nos comandos sem acessar seu conteúdo.
+The skill supports multiple SonarQube editions through environment variables. Detection is automatic based on the availability of the variables (in priority order):
 
-### Variáveis Disponíveis
+> **⚠️ IMPORTANT:** For security, NEVER read, print, or inspect the value of environment variables that contain tokens. The most you may know is which variable the token is stored in. Use the variables directly in commands without accessing their contents.
 
-#### Para URL Customizada (Prioridade Máxima)
-- `SONARQUBE_CUSTOM_URL`: URL base do SonarQube customizado
-- `SONARQUBE_CUSTOM_TOKEN`: Token de autenticação para o SonarQube customizado
-- `SONARQUBE_CUSTOM_EDITION`: Edição do SonarQube customizado (`open` ou `enterprise`, padrão: `open`)
+### Available Variables
 
-#### Para SonarQube Enterprise
-- `SONARQUBE_ENTERPRISE_TOKEN`: Token de autenticação para o SonarQube Enterprise
-- `SONARQUBE_ENTERPRISE_URL`: URL base do SonarQube Enterprise (obrigatório, sem fallback)
+#### For Custom URL (Highest Priority)
+- `SONARQUBE_CUSTOM_URL`: Base URL of the custom SonarQube
+- `SONARQUBE_CUSTOM_TOKEN`: Authentication token for the custom SonarQube
+- `SONARQUBE_CUSTOM_EDITION`: Edition of the custom SonarQube (`open` or `enterprise`, default: `open`)
 
-#### Para SonarQube Open (Padrão)
-- `SONARQUBE_OPEN_TOKEN`: Token de autenticação para o SonarQube Open (preferencial)
-- `SONAR_TK`: Token de autenticação para o SonarQube Open (fallback para compatibilidade, usado apenas se SONARQUBE_OPEN_TOKEN não estiver definido)
-- `SONARQUBE_OPEN_URL`: URL base do SonarQube Open (obrigatório, sem fallback)
+#### For SonarQube Enterprise
+- `SONARQUBE_ENTERPRISE_TOKEN`: Authentication token for SonarQube Enterprise
+- `SONARQUBE_ENTERPRISE_URL`: Base URL of SonarQube Enterprise (required, no fallback)
 
-### Suporte a Branches
+#### For SonarQube Open (Default)
+- `SONARQUBE_OPEN_TOKEN`: Authentication token for SonarQube Open (preferred)
+- `SONAR_TK`: Authentication token for SonarQube Open (fallback for compatibility, used only if SONARQUBE_OPEN_TOKEN is not set)
+- `SONARQUBE_OPEN_URL`: Base URL of SonarQube Open (required, no fallback)
 
-As edições Enterprise e Custom com edição `enterprise` suportam automaticamente o parâmetro `branch` na API. A skill detecta automaticamente o branch atual usando `git branch --show-current`.
+### Branch Support
 
-## 🌍 Suporta Qualquer Stack
-- ✅ **Linguagens:** Java, Kotlin, Python, JavaScript, TypeScript, C#, C++, Go, Ruby, PHP, Scala, PLSQL, VB.NET e outras
+Enterprise and Custom editions with `enterprise` edition automatically support the `branch` parameter in the API. The skill automatically detects the current branch using `git branch --show-current`.
+
+## 🌍 Supports Any Stack
+- ✅ **Languages:** Java, Kotlin, Python, JavaScript, TypeScript, C#, C++, Go, Ruby, PHP, Scala, PLSQL, VB.NET and others
 - ✅ **Frameworks:** Spring, Django, Flask, FastAPI, Express, React, Vue, Angular, .NET, ASP.NET, Gin, Rails, etc.
-- ✅ **Qualquer ferramenta de testes** que gere relatórios de cobertura
-- ✅ **Qualquer gerenciador de dependências** (Maven, Gradle, npm, pip, dotnet, etc.)
+- ✅ **Any test tool** that generates coverage reports
+- ✅ **Any dependency manager** (Maven, Gradle, npm, pip, dotnet, etc.)
 
-## 🔍 Detecção Automática de Stack
+## 🔍 Automatic Stack Detection
 
-A skill detecta automaticamente a stack do projeto analisando os arquivos de configuração. Carregue o script `references/detect-stack.sh` para determinar a stack e configurar os comandos apropriados.
+The skill automatically detects the project's stack by analyzing configuration files. Load the script `references/detect-stack.sh` to determine the stack and configure the appropriate commands.
 
-### Padrões de Detecção
+### Detection Patterns
 
-| Arquivo | Stack | Gerenciador | Ferramenta de Testes | Ferramenta de Cobertura |
+| File | Stack | Manager | Test Tool | Coverage Tool |
 |---|---|---|---|---|
 | `pom.xml` | Java/Kotlin | Maven | Maven Surefire/Failsafe | JaCoCo |
 | `build.gradle` / `build.gradle.kts` | Java/Kotlin | Gradle | Gradle Test | JaCoCo |
@@ -72,98 +73,98 @@ A skill detecta automaticamente a stack do projeto analisando os arquivos de con
 | `composer.json` | PHP | composer | phpunit | phpunit |
 | `build.sbt` | Scala | sbt | sbt test | sbt coverage |
 
-### Script de Detecção
+### Detection Script
 
-Carregue o script `references/detect-stack.sh` para detectar automaticamente a stack do projeto e configurar os comandos apropriados.
+Load the script `references/detect-stack.sh` to automatically detect the project's stack and configure the appropriate commands.
 
 ## Angular-Specific Support
 
-### Detecção Angular
-- Arquivo: `angular.json` ou `angular-cli.json`
-- Gerenciador: npm, yarn, pnpm
-- Framework de Testes: Karma + Jasmine ou Jest
-- Ferramenta de Cobertura: Istanbul (ng test --code-coverage)
+### Angular Detection
+- File: `angular.json` or `angular-cli.json`
+- Manager: npm, yarn, pnpm
+- Test Framework: Karma + Jasmine or Jest
+- Coverage Tool: Istanbul (ng test --code-coverage)
 
-### Comandos Angular
+### Angular Commands
 
 ```bash
-# Testes com cobertura
+# Tests with coverage
 ng test --code-coverage --watch=false
 
 # Linting
 ng lint
 
-# Formatação
+# Formatting
 npx prettier --write src/
 npx eslint --fix src/
 
-# Build para validação
+# Build for validation
 ng build --configuration=production
 ```
 
-### Scripts Angular
-- `references/validate-angular.sh` — Validação Angular (ng lint, ng test, prettier, eslint)
+### Angular Scripts
+- `references/validate-angular.sh` — Angular validation (ng lint, ng test, prettier, eslint)
 
-### Template de Teste Angular
-- `references/templates/test-angular.md` — Template para testes Karma/Jasmine com TestBed
+### Angular Test Template
+- `references/templates/test-angular.md` — Template for Karma/Jasmine tests with TestBed
 
 ## C# .NET-Specific Support
 
-### Detecção C# .NET
-- Arquivo: `.csproj` ou `.sln`
-- Gerenciador: dotnet CLI
-- Framework de Testes: xUnit, NUnit, MSTest
-- Ferramenta de Cobertura: dotnet test /p:CollectCoverage=true
+### C# .NET Detection
+- File: `.csproj` or `.sln`
+- Manager: dotnet CLI
+- Test Framework: xUnit, NUnit, MSTest
+- Coverage Tool: dotnet test /p:CollectCoverage=true
 
-### Comandos C# .NET
+### C# .NET Commands
 
 ```bash
-# Testes com cobertura
+# Tests with coverage
 dotnet test /p:CollectCoverage=true /p:CoverageFormat=cobertura
 
-# Linting e análise
+# Linting and analysis
 dotnet build /p:RunAnalyzersDuringBuild=true
 
-# Formatação
+# Formatting
 dotnet format
 
-# Restore de pacotes
+# Package restore
 dotnet restore
 ```
 
-### Scripts C# .NET
-- `references/validate-csharp.sh` — Validação C#/.NET (dotnet build, dotnet test, dotnet format)
+### C# .NET Scripts
+- `references/validate-csharp.sh` — C#/.NET validation (dotnet build, dotnet test, dotnet format)
 
-### Template de Teste C# .NET
-- `references/templates/test-csharp.md` — Template para testes xUnit/Moq
+### C# .NET Test Template
+- `references/templates/test-csharp.md` — Template for xUnit/Moq tests
 
 ## SonarQube Local Validation
 
-### Script de Validação Local
-Carregue o script `references/sonar-local-scan.sh` para executar SonarQube localmente e revalidar as correções antes do commit.
+### Local Validation Script
+Load the script `references/sonar-local-scan.sh` to run SonarQube locally and revalidate fixes before committing.
 
 ```bash
-# Executar scan local
+# Run local scan
 bash references/sonar-local-scan.sh
 ```
 
-### Configuração SonarQube Local
-O script `sonar-local-scan.sh` requer:
-- `sonar-scanner` instalado (disponível em https://docs.sonarsource.com/sonarqube-server/latest/analyzing-source-code/scanners/sonarscanner/)
-- Java 17+ e `jq`
-- Arquivo `sonar-project.properties` na raiz do projeto (opcional, script configura automaticamente)
+### Local SonarQube Configuration
+The `sonar-local-scan.sh` script requires:
+- `sonar-scanner` installed (available at https://docs.sonarsource.com/sonarqube-server/latest/analyzing-source-code/scanners/sonarscanner/)
+- Java 17+ and `jq`
+- `sonar-project.properties` file in the project root (optional, script configures automatically)
 
-### Instalação do sonar-scanner
+### sonar-scanner Installation
 
 ```bash
-# Linux/macOS (manual): descompacte o ZIP do SonarScanner e adicione <caminho>/bin ao PATH
-export PATH="$HOME/sonar-scanner-<versao>/bin:$PATH"
+# Linux/macOS (manual): unzip the SonarScanner ZIP and add <path>/bin to PATH
+export PATH="$HOME/sonar-scanner-<version>/bin:$PATH"
 
-# Ou use o instalador deste repositório
+# Or use this repository's installer
 ./install-skill-tools.sh --sonar
 ```
 
-### Exemplo de sonar-project.properties
+### Example sonar-project.properties
 ```properties
 sonar.projectKey=my-project
 sonar.sources=src
@@ -174,108 +175,108 @@ sonar.cs.vscoveragexml.reportPaths=coverage.xml
 sonar.javascript.lcov.reportPaths=coverage/lcov.info
 ```
 
-## Fluxo de Trabalho
+## Workflow
 
-### Pré Steps
-- Salve o horário que você iniciou a execução da skill para medir o tempo gasto.
-- Ao concluir a execução, salve o horário de término para calcular o tempo total gasto.
-- Compare o tempo gasto, com o "effort" estimado na issue, para avaliar a eficiência da skill (trazer quantos % de ganho de tempo ou perdas de tempo, em relação ao esforço estimado).
+### Pre Steps
+- Save the time you started running the skill to measure the time spent.
+- When finishing the run, save the end time to calculate the total time spent.
+- Compare the time spent with the "effort" estimated in the issue to evaluate the skill's efficiency (report how many % of time saved or lost relative to the estimated effort).
 
-### Fase 1: Análise e Preparação
+### Phase 1: Analysis and Preparation
 
-1. **Detectar Stack do Projeto**
-   - Carregue o script `references/detect-stack.sh` para detectar automaticamente a stack
-   - O script retornará: `STACK`, `BUILD_TOOL`, `TEST_FRAMEWORK`, `COVERAGE_TOOL`
-   - Configure os comandos apropriados baseados na stack detectada
-   - Se não for possível detectar automaticamente, pergunte ao usuário
+1. **Detect Project Stack**
+   - Load the script `references/detect-stack.sh` to automatically detect the stack
+   - The script returns: `STACK`, `BUILD_TOOL`, `TEST_FRAMEWORK`, `COVERAGE_TOOL`
+   - Configure the appropriate commands based on the detected stack
+   - If automatic detection is not possible, ask the user
 
-2. **Verificar arquivo de issues**
-   - Consulte o nome do projeto, geralmente é o nome da pasta do workspace.
-   - Se não tiver na raiz do projeto crie a pasta .sonar_devin_auto_fix/
-   - **⚠️ SEGURANÇA CRÍTICA:** Jamais print o valor de variáveis de ambiente que contenham token ou secrets. NUNCA leia o valor de tokens para sua memória - o máximo que você pode saber é em qual variável de ambiente o token está armazenado. Use as variáveis diretamente nos comandos bash sem nunca inspecionar seu conteúdo.
-   - Baixe as issues do projeto:
-    Se o usuário expecificar o nome do projeto, use ele, caso contrário tente usar o nome da pasta do workspace, e se mesmo assim não for possível, solicite o nome do projeto para o usuário.
-    Se o usuário fornecer as issues a serem corrigidas, consulte usando o parâmetro `issues` e passando uma lista csv com os IDs das issues, caso contrário baixe todas as issues não resolvidas do projeto usando a API do SonarQube.
-    Se o usuário solicitar para corrigir só as issues novas, baixe as issues não resolvidas, e adicione o filtro `inNewCodePeriod` como true.
+2. **Verify issues file**
+   - Check the project name, usually it is the workspace folder name.
+   - If it is not at the project root, create the `.sonar_devin_auto_fix/` folder
+   - **⚠️ CRITICAL SECURITY:** Never print the value of environment variables that contain tokens or secrets. NEVER read token values into your memory — the most you may know is which environment variable the token is stored in. Use the variables directly in bash commands without ever inspecting their contents.
+   - Download the project's issues:
+     If the user specifies the project name, use it; otherwise try to use the workspace folder name, and if that is still not possible, ask the user for the project name.
+     If the user provides the issues to be fixed, query using the `issues` parameter and pass a csv list with the issue IDs; otherwise download all unresolved issues from the project using the SonarQube API.
+     If the user requests to fix only new issues, download the unresolved issues and add the `inNewCodePeriod` filter set to true.
 
-    **Detecção automática de edição do SonarQube:**
-    A skill detecta automaticamente qual edição usar baseada nas variáveis de ambiente disponíveis (em ordem de prioridade):
+     **Automatic SonarQube edition detection:**
+     The skill automatically detects which edition to use based on the available environment variables (in priority order):
 
-    1. **Custom URL** (prioridade máxima): Se `$SONARQUBE_CUSTOM_URL` estiver definida
-    2. **Enterprise**: Se `$SONARQUBE_ENTERPRISE_TOKEN` estiver definido
-    3. **Open**: Se `$SONARQUBE_OPEN_TOKEN` ou `$SONAR_TK` estiver definido
-    4. **Erro**: Se nenhum dos acima, aborta e solicita a configuração das variáveis de ambiente (não há URL automática/fallback).
+     1. **Custom URL** (highest priority): If `$SONARQUBE_CUSTOM_URL` is set
+     2. **Enterprise**: If `$SONARQUBE_ENTERPRISE_TOKEN` is set
+     3. **Open**: If `$SONARQUBE_OPEN_TOKEN` or `$SONAR_TK` is set
+     4. **Error**: If none of the above, abort and request the environment variables to be configured (there is no automatic/fallback URL).
 
-    **Download das issues com detecção automática:**
-    Carregue o script de referência `references/download-issues.sh` e execute-o.
+     **Download issues with automatic detection:**
+     Load the reference script `references/download-issues.sh` and execute it.
 
-   - Indent o arquivo de issues baixado, usando o script `references/jsonf.sh`
-   - Confirme que `.sonar_devin_auto_fix/sonarqube_issues.json` existe e é parseável
-   - Baseie todas as correções exclusivamente nas issues listadas nesse JSON
+   - Indent the downloaded issues file using the script `references/jsonf.sh`
+   - Confirm that `.sonar_devin_auto_fix/sonarqube_issues.json` exists and is parseable
+   - Base all fixes exclusively on the issues listed in that JSON
 
-2. **Criar ToDo Board**
-   - Crie o arquivo `.sonar_devin_auto_fix/SONAR_FIX_TODO_BOARD.md`
-   - Use o formato:
+2. **Create ToDo Board**
+   - Create the file `.sonar_devin_auto_fix/SONAR_FIX_TODO_BOARD.md`
+   - Use the format:
      ```markdown
      # SonarQube Review ToDo Board
 
-     ## Checklist de issues do SonarQube
+     ## SonarQube Issues Checklist
 
-     - [ ] Issue <ID> — Regra: <RuleKey> — Arquivo: `<caminho/do/arquivo>` — Linha: <linha>
-           Resumo: <mensagem curta da issue>
+     - [ ] Issue <ID> — Rule: <RuleKey> — File: `<path/to/file>` — Line: <line>
+           Summary: <short issue message>
      ```
-   - Agrupe por arquivo, se possível
-   - Ordene por gravidade (Blocker → Critical → Major → Minor → Info)
+   - Group by file if possible
+   - Sort by severity (Blocker → Critical → Major → Minor → Info)
 
-### Fase 2: Correção de Issues
+### Phase 2: Issue Fixing
 
-Para cada issue, execute em ordem:
+For each issue, execute in order:
 
-1. **Modifique o código** - Resolva a issue específica
-2. **Gere testes automaticamente** (se aplicável) - Carregue o template de teste apropriado para a stack detectada
-3. **Atualize testes** - Garanta 100% de cobertura das linhas alteradas
-4. **Rode testes** - Execute a suíte de testes unitários
-5. **Verifique cobertura** - Confirme 100% de cobertura das linhas alteradas
-6. **Rode linters específicos** - Execute linters da stack para validar a correção
-7. **Formate o código** - Execute formatters da stack para manter consistência
-8. **Atualize o ToDo Board** - Marque a issue como `[x]` quando corrigida
+1. **Modify the code** - Resolve the specific issue
+2. **Generate tests automatically** (if applicable) - Load the appropriate test template for the detected stack
+3. **Update tests** - Ensure 100% coverage of the modified lines
+4. **Run tests** - Execute the unit test suite
+5. **Check coverage** - Confirm 100% coverage of the modified lines
+6. **Run stack-specific linters** - Execute stack linters to validate the fix
+7. **Format the code** - Execute stack formatters to keep consistency
+8. **Update the ToDo Board** - Mark the issue as `[x]` when fixed
 
-### Fase 3: Documentação e Finalização
+### Phase 3: Documentation and Finalization
 
-1. **Atualizar .gitignore**
-   - Abra `.gitignore` na raiz do projeto
-   - Adicione a linha: `.sonar_devin_auto_fix/**`
-   - Somente se não existir equivalente
+1. **Update .gitignore**
+   - Open `.gitignore` at the project root
+   - Add the line: `.sonar_devin_auto_fix/**`
+   - Only if an equivalent does not already exist
 
-2. **Gerar Guia de Revisão**
-   - Crie `.sonar_devin_auto_fix/SONAR_FIX_REVIEW_NOTES.md`
-   - Inclua seções:
-     - **Resumo das alterações**: número de issues corrigidas e tipos de correções
-     - **Como revisar**: instruções para o dev revisar as mudanças
-     - **Pontos de atenção**: lógica sensível que foi alterada
-     - **Testes**: como rodar testes e cobertura
-     - **Verificação pós-revisão**: validações finais
+2. **Generate Review Guide**
+   - Create `.sonar_devin_auto_fix/SONAR_FIX_REVIEW_NOTES.md`
+   - Include sections:
+     - **Summary of changes**: number of issues fixed and types of fixes
+     - **How to review**: instructions for the developer to review the changes
+     - **Points of attention**: sensitive logic that was changed
+     - **Tests**: how to run tests and coverage
+     - **Post-review verification**: final validations
 
-3. **Validação final**
-   - O scan do SonarQube será executado pelo pipeline de CI/CD após o merge
-   - Confirme que o código está limpo e os testes passando
+3. **Final validation**
+   - The SonarQube scan will be run by the CI/CD pipeline after the merge
+   - Confirm that the code is clean and tests are passing
 
-4. **Gerar Dashboard de Métricas**
-   - Crie `.sonar_devin_auto_fix/SONAR_FIX_METRICS.html`
-   - Inclua:
-     - Tempo gasto vs effort estimado (em %)
-     - Número de issues corrigidas por tipo (bug, code smell, vulnerability, hotspot)
-     - Cobertura antes/depois
-     - Regressões evitadas
-     - Stack detectada e ferramentas utilizadas
+4. **Generate Metrics Dashboard**
+   - Create `.sonar_devin_auto_fix/SONAR_FIX_METRICS.html`
+   - Include:
+     - Time spent vs estimated effort (in %)
+     - Number of issues fixed by type (bug, code smell, vulnerability, hotspot)
+     - Coverage before/after
+     - Regressions avoided
+     - Detected stack and tools used
 
-## 🛠️ Ferramentas Externas Integradas
+## 🛠️ Integrated External Tools
 
-A skill integra automaticamente ferramentas externas por stack para validar e formatar o código após as correções.
+The skill automatically integrates external tools per stack to validate and format the code after fixes.
 
-### Linters por Stack
+### Linters by Stack
 
-| Stack | Linter | Comando |
+| Stack | Linter | Command |
 |---|---|---|
 | Java/Kotlin | Checkstyle, PMD | `mvn checkstyle:check pmd:check` |
 | JavaScript/TypeScript | ESLint | `npx eslint src/` |
@@ -286,9 +287,9 @@ A skill integra automaticamente ferramentas externas por stack para validar e fo
 | PHP | PHPStan | `vendor/bin/phpstan analyse` |
 | Scala | Scalastyle, Scapegoat | `sbt scalastyle scapegoat` |
 
-### Formatters por Stack
+### Formatters by Stack
 
-| Stack | Formatter | Comando |
+| Stack | Formatter | Command |
 |---|---|---|
 | Java/Kotlin | Spotless, Google Java Format | `mvn spotless:apply` |
 | JavaScript/TypeScript | Prettier | `npx prettier --write src/` |
@@ -298,9 +299,9 @@ A skill integra automaticamente ferramentas externas por stack para validar e fo
 | Ruby | Rufo | `bundle exec rufo` |
 | PHP | PHP CS Fixer | `vendor/bin/php-cs-fixer fix` |
 
-### Ferramentas de Cobertura por Stack
+### Coverage Tools by Stack
 
-| Stack | Ferramenta | Comando |
+| Stack | Tool | Command |
 |---|---|---|
 | Java/Kotlin | JaCoCo | `mvn jacoco:report` |
 | JavaScript/TypeScript | Istanbul | `npx vitest run --coverage` |
@@ -311,139 +312,139 @@ A skill integra automaticamente ferramentas externas por stack para validar e fo
 | PHP | phpunit --coverage-clover | `vendor/bin/phpunit --coverage-clover=coverage.xml` |
 | Scala | sbt coverage | `sbt clean coverage test coverageReport` |
 
-### SonarLint e SonarScanner
+### SonarLint and SonarScanner
 
-A skill pode utilizar SonarLint e SonarScanner para validação local antes do commit:
+The skill may use SonarLint and SonarScanner for local validation before committing:
 
 **SonarLint (IDE Integration):**
-- Disponível para IntelliJ IDEA, VS Code, Eclipse
-- Valida código em tempo real
-- Pode ser invocado via linha de comando para validação batch
+- Available for IntelliJ IDEA, VS Code, Eclipse
+- Validates code in real time
+- Can be invoked via command line for batch validation
 
 **SonarScanner CLI:**
-- Para scans locais antes do push
-- Validação offline de correções
-- Comando: `sonar-scanner -Dsonar.projectKey=<project> -Dsonar.sources=src`
+- For local scans before push
+- Offline validation of fixes
+- Command: `sonar-scanner -Dsonar.projectKey=<project> -Dsonar.sources=src`
 
-### Scripts de Validação
+### Validation Scripts
 
-A skill carrega scripts de referência para validação automática por stack:
+The skill loads reference scripts for automatic validation per stack:
 
-- `references/validate-java.sh` — Validação Java/Kotlin (Checkstyle, PMD, Spotless, JaCoCo)
-- `references/validate-js.sh` — Validação JavaScript/TypeScript (ESLint, Prettier, Vitest)
-- `references/validate-python.sh` — Validação Python (Pylint, Flake8, Black, pytest)
-- `references/validate-csharp.sh` — Validação C#/.NET (Roslyn Analyzers, dotnet format, dotnet test)
-- `references/validate-go.sh` — Validação Go (golangci-lint, gofmt, go test)
-- `references/validate-ruby.sh` — Validação Ruby (RuboCop, Rufo, rspec)
-- `references/validate-php.sh` — Validação PHP (PHPStan, PHP CS Fixer, phpunit)
-- `references/validate-scala.sh` — Validação Scala (Scalastyle, Scapegoat, sbt)
+- `references/validate-java.sh` — Java/Kotlin validation (Checkstyle, PMD, Spotless, JaCoCo)
+- `references/validate-js.sh` — JavaScript/TypeScript validation (ESLint, Prettier, Vitest)
+- `references/validate-python.sh` — Python validation (Pylint, Flake8, Black, pytest)
+- `references/validate-csharp.sh` — C#/.NET validation (Roslyn Analyzers, dotnet format, dotnet test)
+- `references/validate-go.sh` — Go validation (golangci-lint, gofmt, go test)
+- `references/validate-ruby.sh` — Ruby validation (RuboCop, Rufo, rspec)
+- `references/validate-php.sh` — PHP validation (PHPStan, PHP CS Fixer, phpunit)
+- `references/validate-scala.sh` — Scala validation (Scalastyle, Scapegoat, sbt)
 
-## 🎨 Templates de Testes por Stack
+## 🎨 Test Templates by Stack
 
-A skill gera testes automaticamente baseados em templates específicos por stack. Carregue o template apropriado da pasta `references/templates/`:
+The skill generates tests automatically based on stack-specific templates. Load the appropriate template from the `references/templates/` folder:
 
-- `test-java.md` — Template para testes JUnit/Mockito
-- `test-kotlin.md` — Template para testes KotlinTest/Mockk
-- `test-python.md` — Template para testes pytest/unittest
-- `test-javascript.md` — Template para testes Jest/Vitest
-- `test-typescript.md` — Template para testes TypeScript
-- `test-csharp.md` — Template para testes xUnit/Moq
-- `test-go.md` — Template para testes Go
-- `test-ruby.md` — Template para testes RSpec/Minitest
-- `test-php.md` — Template para testes PHPUnit
-- `test-scala.md` — Template para testes ScalaTest/ScalaCheck
+- `test-java.md` — Template for JUnit/Mockito tests
+- `test-kotlin.md` — Template for KotlinTest/Mockk tests
+- `test-python.md` — Template for pytest/unittest tests
+- `test-javascript.md` — Template for Jest/Vitest tests
+- `test-typescript.md` — Template for TypeScript tests
+- `test-csharp.md` — Template for xUnit/Moq tests
+- `test-go.md` — Template for Go tests
+- `test-ruby.md` — Template for RSpec/Minitest tests
+- `test-php.md` — Template for PHPUnit tests
+- `test-scala.md` — Template for ScalaTest/ScalaCheck tests
 
-### Testes e Cobertura
-- ✅ **100% de cobertura das linhas modificadas** (verificado em relatório de cobertura)
-- ✅ **Nenhuma exclusão de cobertura**, como:
-  - Comentários: `// NOSONAR`, `// no sonar`, `# noqa`, `# pragma: no cover`, etc.
-  - Decoradores/Atributos: `@IgnoreCoverage`, `ExcludeFromCodeCoverage`, `@Suppress`, etc.
-  - Pragmas do compilador: `#pragma`, etc.
-  - IMPORTANTE: Se o arquivo já tiver exclusão de cobertura, remova-a, e implemente testes para a correção e também para o restante do código do arquivo, garantindo cobertura total.
-- ✅ Remova arquivos de scanners do SonarQube que possam estar presentes, como `sonar-project.properties`, `sonar-scanner.properties`, etc., Remova também outros scanners, como o `SonarScanner for Maven` geralmente presente no POM.xml, pois nossa pipeline é autonoma e não depende desses arquivos para funcionar. (Mantenha por enquanto apenas configurações relacionadas ao SonarQube em arquivos .csproj).
-- ✅ Todos os testes passando
-- ✅ Relatório de cobertura disponível (formato: OpenCover, JaCoCo, Cobertura, Istanbul, etc.)
+### Tests and Coverage
+- ✅ **100% coverage of modified lines** (verified in coverage report)
+- ✅ **No coverage exclusions**, such as:
+  - Comments: `// NOSONAR`, `// no sonar`, `# noqa`, `# pragma: no cover`, etc.
+  - Decorators/Attributes: `@IgnoreCoverage`, `ExcludeFromCodeCoverage`, `@Suppress`, etc.
+  - Compiler pragmas: `#pragma`, etc.
+  - IMPORTANT: If the file already has a coverage exclusion, remove it and implement tests for the fix as well as for the rest of the file's code, ensuring full coverage.
+- ✅ Remove SonarQube scanner files that may be present, such as `sonar-project.properties`, `sonar-scanner.properties`, etc. Also remove other scanners, such as the `SonarScanner for Maven` usually present in the POM.xml, since our pipeline is autonomous and does not depend on these files to work. (For now, keep only SonarQube-related configurations in `.csproj` files).
+- ✅ All tests passing
+- ✅ Coverage report available (formats: OpenCover, JaCoCo, Cobertura, Istanbul, etc.)
 
-### Qualidade de Código
-- ✅ Sem novos smells de código ou violations do SonarQube
-- ✅ Sem regressões de funcionalidade
-- ✅ Sem problemas de performance óbvios
-- ✅ Alterações pontuais e mínimas
-- ✅ Código segue convenções e padrões do projeto
-- ✅ Sem mudanças desnecessárias em áreas não relacionadas à issue
+### Code Quality
+- ✅ No new code smells or SonarQube violations
+- ✅ No functional regressions
+- ✅ No obvious performance problems
+- ✅ Minimal, targeted changes
+- ✅ Code follows project conventions and standards
+- ✅ No unnecessary changes in areas unrelated to the issue
 
-### Lógica de Negócio
-- ✅ **Não altere** lógica de negócio sem necessidade extrema
-- ✅ Se for necessário alterar pontos sensíveis (regras de negócio, cálculos críticos, fluxos principais):
-  - Minimize a alteração
-  - Documente claramente no guia de revisão
-  - Justifique por que foi inevitável
-  - Adicione testes específicos para validar a alteração
+### Business Logic
+- ✅ **Do not change** business logic without extreme necessity
+- ✅ If it is necessary to change sensitive points (business rules, critical calculations, main flows):
+  - Minimize the change
+  - Document clearly in the review guide
+  - Justify why it was unavoidable
+  - Add specific tests to validate the change
 
-### Dependências
-- ✅ **Não adicione** dependências desnecessárias
-- ✅ Limite-se ao escopo das correções do SonarQube
-- ✅ Se for absolutamente necessário adicionar uma dependency, justifique e documente
-- ✅ Verifique se não há conflitos com as dependências existentes
+### Dependencies
+- ✅ **Do not add** unnecessary dependencies
+- ✅ Stay within the scope of SonarQube fixes
+- ✅ If adding a dependency is absolutely necessary, justify and document it
+- ✅ Check that there are no conflicts with existing dependencies
 
-## Checklist de Conclusão
+## Completion Checklist
 
-- [ ] Todas as issues analisadas e categorizadas no SONAR_FIX_TODO_BOARD.md
-- [ ] Todas as issues corrigidas com 100% de cobertura de testes
-- [ ] Todos os testes passando
-- [ ] .gitignore atualizado com `.sonar_devin_auto_fix/**`
-- [ ] SONAR_FIX_REVIEW_NOTES.md gerado com instruções completas
-- [ ] Nenhuma nova issue introduzida (verificado via revisão de código e testes)
+- [ ] All issues analyzed and categorized in SONAR_FIX_TODO_BOARD.md
+- [ ] All issues fixed with 100% test coverage
+- [ ] All tests passing
+- [ ] .gitignore updated with `.sonar_devin_auto_fix/**`
+- [ ] SONAR_FIX_REVIEW_NOTES.md generated with complete instructions
+- [ ] No new issue introduced (verified via code review and tests)
 
-## Comandos Úteis (Exemplos por Stack)
+## Useful Commands (Examples by Stack)
 
-### ⚠️ Importante: Ambientes Isolados com Parâmetros Obrigatórios
+### ⚠️ Important: Isolated Environments with Required Parameters
 
-**Os comandos estão configurados para forçar ambientes isolados. O prefixo de isolamento é obrigatório, mas você pode adicionar mais parâmetros após ele.**
+**Commands are configured to force isolated environments. The isolation prefix is required, but you may add more parameters after it.**
 
-**Regra:** Mantenha o parâmetro de isolamento (ex: `-Dmaven.repo.local=./.m2/repository`), mas pode adicionar mais flags.
+**Rule:** Keep the isolation parameter (e.g. `-Dmaven.repo.local=./.m2/repository`), but you may add more flags.
 
 ### Java / Kotlin (Maven)
 
 ```bash
-# ✅ PERMITIDO - Isolamento obrigatório + parâmetros adicionais
+# ✅ ALLOWED - Mandatory isolation + additional parameters
 mvn -Dmaven.repo.local=./.m2/repository clean test
 mvn -Dmaven.repo.local=./.m2/repository -DskipTests=false jacoco:report
 mvn -Dmaven.repo.local=./.m2/repository -Dorg.slf4j.simpleLogger.defaultLogLevel=debug clean test
 
-# ❌ NÃO PERMITIDO - Sem isolamento
+# ❌ NOT ALLOWED - No isolation
 mvn clean test
 ```
 
 ### Java / Kotlin (Gradle)
 
 ```bash
-# ✅ PERMITIDO - Isolamento obrigatório + flags adicionais
+# ✅ ALLOWED - Mandatory isolation + additional flags
 gradle --gradle-user-home ./.gradle test
 gradle --gradle-user-home ./.gradle test --info
 gradle --gradle-user-home ./.gradle clean build -x test
 
-# ❌ NÃO PERMITIDO - Sem isolamento
+# ❌ NOT ALLOWED - No isolation
 gradle test
 ```
 
 ### JavaScript / TypeScript / Node.js
 
 ```bash
-# npm ✅ PERMITIDO
+# npm ✅ ALLOWED
 npm install --no-save
 npm install --no-save --verbose
 npm test -- --coverage --verbose
 
-# yarn ✅ PERMITIDO
+# yarn ✅ ALLOWED
 yarn install --offline
 yarn install --offline --verbose
 
-# pnpm ✅ PERMITIDO
+# pnpm ✅ ALLOWED
 pnpm install
 pnpm install --verbose
 
-# npx ✅ PERMITIDO (qualquer parâmetro)
+# npx ✅ ALLOWED (any parameter)
 npx vitest run --coverage
 npx eslint src/
 ```
@@ -451,16 +452,16 @@ npx eslint src/
 ### Python
 
 ```bash
-# Criar venv (se não existir) ✅ PERMITIDO
+# Create venv (if not exists) ✅ ALLOWED
 python -m venv .venv
 python -m venv .venv --upgrade-deps
 
-# pip com isolamento ✅ PERMITIDO
+# pip with isolation ✅ ALLOWED
 python -m pip install -r requirements.txt -q
 python -m pip install --target ./.venv/lib -q package-name
 python -m pip install --target ./.venv/lib --upgrade package-name
 
-# pytest e coverage ✅ PERMITIDO
+# pytest and coverage ✅ ALLOWED
 python -m pytest --cov=src tests/ -v
 python -m pytest --cov=src tests/ --cov-report=html
 python -m coverage run -m pytest
@@ -470,16 +471,16 @@ python -m coverage report --skip-covered
 ### C# / .NET
 
 ```bash
-# ✅ PERMITIDO
+# ✅ ALLOWED
 dotnet test
 dotnet test /p:CollectCoverage=true /p:CoverageFormat=cobertura
-dotnet test /p:CollectCoverage=true /p:Exclude=\"[*Tests]*\"
+dotnet test /p:CollectCoverage=true /p:Exclude="[*Tests]*"
 ```
 
 ### Go
 
 ```bash
-# ✅ PERMITIDO
+# ✅ ALLOWED
 go test -cover ./...
 go test -cover ./... -v
 go test -coverprofile=coverage.out ./... -timeout=10m
@@ -488,7 +489,7 @@ go test -coverprofile=coverage.out ./... -timeout=10m
 ### Ruby / Rails
 
 ```bash
-# ✅ PERMITIDO
+# ✅ ALLOWED
 bundle install --local
 bundle install --local --no-deployment
 bundle exec rspec --coverage
@@ -498,7 +499,7 @@ bundle exec rspec --coverage -f progress
 ### PHP
 
 ```bash
-# ✅ PERMITIDO
+# ✅ ALLOWED
 composer install --no-dev
 composer install --no-dev --optimize-autoloader
 composer install --no-dev --classmap-authoritative
@@ -509,55 +510,55 @@ vendor/bin/phpunit --coverage-clover=coverage.xml -v
 ### Scala
 
 ```bash
-# ✅ PERMITIDO
+# ✅ ALLOWED
 sbt clean coverage test coverageReport
 sbt clean coverage test coverageReport -Dconfig=test
 sbt "test -- -Dverbose=true"
 ```
 
-## 🧹 Limpeza do Ambiente
+## 🧹 Environment Cleanup
 
-Ao finalizar todas as correções, rode:
+When finishing all fixes, run:
 
 ```bash
 git status
 ```
 
-Analise a saída e:
+Analyze the output and:
 
-- Arquivos temporários, de build, cobertura ou cache que aparecerem → adicione ao `.gitignore`
-- Arquivos staged que **não deveriam** estar → remova com `git restore --staged <arquivo>`
-- Confirme que `.sonar_devin_auto_fix/` **não aparece** como staged
+- Temporary, build, coverage, or cache files that appear → add to `.gitignore`
+- Staged files that **should not** be there → remove with `git restore --staged <file>`
+- Confirm that `.sonar_devin_auto_fix/` **does not appear** as staged
 
-> ⚠️ **Não faça commit.** Deixe o repositório limpo e organizado para que o desenvolvedor humano revise e decida o que commitar.
+> ⚠️ **Do not commit.** Leave the repository clean and organized so the human developer can review and decide what to commit.
 
-### Limpeza de Ambientes Isolados (Opcional)
+### Cleanup of Isolated Environments (Optional)
 
-Se desejar remover ambientes isolados após conclusão:
+If you want to remove isolated environments after completion:
 
 ```bash
 # Python venv
 rm -rf .venv
 
-# Maven local repository (mantém src/pom.xml intacto)
+# Maven local repository (keeps src/pom.xml intact)
 rm -rf .m2
 
-# Node modules (se necessário)
+# Node modules (if needed)
 rm -rf node_modules .npm
 
-# Outros caches
+# Other caches
 find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 find . -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
 find . -type d -name "node_modules/.cache" -exec rm -rf {} + 2>/dev/null || true
 ```
 
-**Importante:** Verifique que os ambientes isolados estão no `.gitignore`:
+**Important:** Verify that the isolated environments are in `.gitignore`:
 
 ```bash
-# Verificar se já estão no .gitignore
+# Check if already in .gitignore
 grep -E "^\.venv$|^\.m2$|^node_modules$|^__pycache__$" .gitignore
 
-# Se não encontrar, adicionar:
+# If not found, add them:
 echo ".venv" >> .gitignore
 echo ".m2" >> .gitignore
 echo "node_modules" >> .gitignore
@@ -565,16 +566,16 @@ echo ".pytest_cache" >> .gitignore
 echo "__pycache__" >> .gitignore
 ```
 
-## Notas Importantes
+## Important Notes
 
-- 🎯 Trabalhe em iterações: uma issue por vez, com testes e documentação
-- 📝 Mantenha o código limpo e alinhado ao padrão existente do projeto
-- 🔍 Priorize a clareza e a manutenibilidade
-- ⚠️ Sempre considere o impacto de cada mudança na lógica de negócio
-- 🧹 **SEMPRE limpe o ambiente ao finalizar** — nenhum arquivo temporário deve ficar pendente
-- ⚡ **Seja eficiente com tempo e tokens:** evite leituras desnecessárias, explorações excessivas e repetições. Leia apenas o que for estritamente necessário para corrigir a issue em questão. Prefira ações diretas e objetivas. Evite invocar ferramentas desnecessárias — use apenas o que a tarefa exige.
-- 🚫 **Não implemente nada além do solicitado:** corrija exclusivamente as issues listadas no `sonarqube_issues.json`. Não refatore sem necessidade, não melhore, não adicione funcionalidades, não reorganize código que não esteja diretamente relacionado à issue.
-- 🚫 **Não execute scripts de programação que requer validação humana antes de liberar:** ao tentar executar scripts é levado um prompt pro usuário decidir se pode ou não ser executado, o que remove sua autonomia e gera mais trabalho para o usuário.
+- 🎯 Work in iterations: one issue at a time, with tests and documentation
+- 📝 Keep code clean and aligned with the project's existing standard
+- 🔍 Prioritize clarity and maintainability
+- ⚠️ Always consider the impact of each change on business logic
+- 🧹 **ALWAYS clean the environment when finishing** — no temporary file should remain pending
+- ⚡ **Be efficient with time and tokens:** avoid unnecessary reads, excessive exploration, and repetitions. Read only what is strictly necessary to fix the issue at hand. Prefer direct and objective actions. Avoid invoking unnecessary tools — use only what the task requires.
+- 🚫 **Do not implement anything beyond what was requested:** fix exclusively the issues listed in `sonarqube_issues.json`. Do not refactor without need, do not improve, do not add features, do not reorganize code that is not directly related to the issue.
+- 🚫 **Do not run programming scripts that require human validation before release:** when trying to run scripts, a prompt is presented to the user to decide whether it can be executed, which removes your autonomy and generates more work for the user.
 
 ## The Iron Law
 
@@ -582,53 +583,53 @@ echo "__pycache__" >> .gitignore
 NO COVERAGE EXCLUSIONS
 ```
 
-Nenhuma exclusão de cobertura deve ser usada para contornar a falta de testes.
+No coverage exclusion may be used to bypass the lack of tests.
 
 **No exceptions:**
-- Não use `// NOSONAR`, `// no sonar`, `# noqa`, `# pragma: no cover`
-- Não use decoradores como `@IgnoreCoverage`, `ExcludeFromCodeCoverage`, `@Suppress`
-- Não use pragmas do compilador como `#pragma` para exclusões
-- Se o arquivo já tiver exclusão, remova-a e implemente testes para o código
-- Garanta 100% de cobertura das linhas modificadas
+- Do not use `// NOSONAR`, `// no sonar`, `# noqa`, `# pragma: no cover`
+- Do not use decorators such as `@IgnoreCoverage`, `ExcludeFromCodeCoverage`, `@Suppress`
+- Do not use compiler pragmas such as `#pragma` for exclusions
+- If the file already has an exclusion, remove it and implement tests for the code
+- Ensure 100% coverage of the modified lines
 
 ## Common Mistakes
 
-| Erro | Consequência | Como evitar |
+| Mistake | Consequence | How to avoid |
 |------|-------------|-------------|
-| Adicionar exclusões de cobertura | Código sem testes aprovado | Implemente testes para todas as linhas modificadas |
-| Corrigir issues sem testes | Regressões não detectadas | Sempre adicionar testes unitários para cada correção |
-| Modificar lógica de negócio sem necessidade | Risco de bugs | Limite-se ao escopo da issue do SonarQube |
-| Não rodar linters após correção | Novas violações introduzidas | Execute linters da stack após cada correção |
-| Não limpar ambiente ao final | Arquivos temporários no repo | Execute limpeza de ambiente ao finalizar |
-| Printar valores de variáveis de ambiente | Violação de segurança | NUNCA leia ou print tokens, use variáveis diretamente nos comandos |
+| Add coverage exclusions | Code without tests approved | Implement tests for all modified lines |
+| Fix issues without tests | Undetected regressions | Always add unit tests for each fix |
+| Change business logic without need | Bug risk | Stay within the scope of the SonarQube issue |
+| Do not run linters after fixing | New violations introduced | Run stack linters after each fix |
+| Do not clean environment at the end | Temporary files in repo | Run environment cleanup when finishing |
+| Print environment variable values | Security violation | NEVER read or print tokens, use variables directly in commands |
 
 ## Anti-Patterns
 
-### ❌ "Este código é simples demais para precisar de teste"
+### ❌ "This code is too simple to need a test"
 
-Mesmo código simples pode ter bugs. TDD aplica-se a qualquer correção, não importa a complexidade.
+Even simple code can have bugs. TDD applies to any fix, regardless of complexity.
 
-### ❌ "Vou adicionar exclusão de cobertura só para este caso"
+### ❌ "I'll add a coverage exclusion just for this case"
 
-Exclusões de cobertura violam o princípio de qualidade. Se o código é complexo demais para testar, refatore-o.
+Coverage exclusions violate the quality principle. If the code is too complex to test, refactor it.
 
-### ❌ "O SonarQube está errado, não vou corrigir"
+### ❌ "SonarQube is wrong, I won't fix it"
 
-SonarQube pode ter falsos positivos, mas a maioria das issues é válida. Corrija e discuta casos legítimos com a equipe.
+SonarQube can have false positives, but most issues are valid. Fix them and discuss legitimate cases with the team.
 
-### ❌ "Vou corrigir tudo de uma vez sem testes"
+### ❌ "I'll fix everything at once without tests"
 
-Correções em massa sem testes aumentam drasticamente o risco de regressões. Corrija uma issue por vez com testes.
+Bulk fixes without tests drastically increase the risk of regressions. Fix one issue at a time with tests.
 
-### ❌ "Não preciso rodar o scan local, o pipeline vai validar"
+### ❌ "I don't need to run the local scan, the pipeline will validate"
 
-Validação local economiza tempo e evita rejeições no pipeline. Use o script `sonar-local-scan.sh`.
+Local validation saves time and avoids pipeline rejections. Use the `sonar-local-scan.sh` script.
 
 ## Adaptations for this catalog
 
 This skill follows the agent catalog standards:
 - **Frontmatter** aligned to repo standard: `license: UNLICENSED`, `metadata.version`, `metadata.author`, tripartite `description` with explicit `Do NOT use for` clause
-- **Language:** Portuguese (pt-BR) for content, English for technical terms
+- **Language:** English (en-us) for content, technical terms in English
 - **Branch policy:** follow `feature/{agent}-{YYYYMMDD}-{short-description}`
 - **Git workflow:** branches created from `develop`, PR target is `develop` (not `main`)
 

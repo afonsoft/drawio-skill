@@ -1,8 +1,13 @@
 ---
 name: code-review-and-quality
-description: Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.
+license: UNLICENSED
+description: Use when reviewing code before it merges — your own, another agent's, or a human's. Assesses quality across five axes (correctness, readability, architecture, security, performance) before a change enters the main branch. Do NOT use for writing code, or as a substitute for automated tests/CI; this is a review gate, not an implementation guide.
 author: afonsoft
 url: https://github.com/afonsoft/skills
+metadata:
+  version: "1.0.0"
+  visibility: public
+  author: afonsoft
 ---
 
 # Code Review and Quality

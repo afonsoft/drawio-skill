@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script de validação para Go
-# Executa golangci-lint, gofmt e go test
+# Validation script for Go
+# Runs golangci-lint, gofmt and go test
 
-echo "Validando Go..."
+echo "Validating Go..."
 
 # golangci-lint
 golangci-lint run
@@ -12,7 +12,7 @@ golangci-lint run
 # gofmt (formatter)
 gofmt -l .
 
-# go test (testes com cobertura)
+# go test (tests with coverage)
 go test -cover ./...
 
-echo "Validação Go concluída."
+echo "Go validation completed."

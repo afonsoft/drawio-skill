@@ -1,4 +1,4 @@
-# Template de Teste Kotlin (KotlinTest + Mockk)
+# Kotlin Test Template (KotlinTest + Mockk)
 
 ```kotlin
 import io.mockk.every
@@ -26,10 +26,10 @@ class ExampleClassTest {
 }
 ```
 
-## Padrões
+## Patterns
 
-- Use KotlinTest ou JUnit 5
-- Use Mockk para mocks
+- Use KotlinTest or JUnit 5
+- Use Mockk for mocks
 - Given-When-Then pattern
-- Verifique todas as chamadas de mocks
-- Use backticks para nomes de testes descritivos
+- Verify all mock calls
+- Use backticks for descriptive test names

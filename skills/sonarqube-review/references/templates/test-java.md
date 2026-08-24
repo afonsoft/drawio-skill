@@ -1,4 +1,4 @@
-# Template de Teste Java (JUnit 5 + Mockito)
+# Java Test Template (JUnit 5 + Mockito)
 
 ```java
 package com.example.test;
@@ -35,9 +35,9 @@ public class ExampleTest {
 }
 ```
 
-## Padrões
+## Patterns
 
 - Use JUnit 5 (org.junit.jupiter.api)
-- Use Mockito para mocks
+- Use Mockito for mocks
 - Given-When-Then pattern
-- Verifique todas as interações com mocks
+- Verify all mock interactions

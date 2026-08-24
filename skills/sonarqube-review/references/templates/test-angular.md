@@ -1,8 +1,8 @@
 # Angular Test Template (Karma + Jasmine)
 
-Template para testes unitários em Angular usando Karma e TestBed.
+Template for unit tests in Angular using Karma and TestBed.
 
-## Estrutura Básica
+## Basic Structure
 
 ```typescript
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -19,7 +19,7 @@ describe('{{ComponentName}}', () => {
       declarations: [ {{ComponentName}} ],
       imports: [HttpClientTestingModule],
       providers: [
-        // Adicione providers necessários aqui
+        // Add any necessary providers here
       ]
     }).compileComponents();
 
@@ -37,11 +37,11 @@ describe('{{ComponentName}}', () => {
     expect(component).toBeTruthy();
   });
 
-  // Adicione testes específicos aqui
+  // Add specific tests here
 });
 ```
 
-## Testes de Componentes com Inputs
+## Component Tests with Inputs
 
 ```typescript
 describe('{{ComponentName}}', () => {
@@ -66,7 +66,7 @@ describe('{{ComponentName}}', () => {
 });
 ```
 
-## Testes de Serviços
+## Service Tests
 
 ```typescript
 import { TestBed } from '@angular/core/testing';
@@ -103,7 +103,7 @@ describe('{{ServiceName}}', () => {
 });
 ```
 
-## Testes de Pipes
+## Pipe Tests
 
 ```typescript
 import { {{PipeName}} } from './{{pipe-file}}';
@@ -116,7 +116,7 @@ describe('{{PipeName}}', () => {
 });
 ```
 
-## Testes de Diretivas
+## Directive Tests
 
 ```typescript
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -148,12 +148,12 @@ describe('{{DirectiveName}}', () => {
 class TestComponent {}
 ```
 
-## Boas Práticas
+## Best Practices
 
-- Use `TestBed` para configurar o ambiente de teste
-- Use `HttpClientTestingModule` para testes de HTTP
-- Use `async/await` para configuração assíncrona
-- Chame `fixture.detectChanges()` após alterar propriedades
-- Use `httpMock.verify()` para garantir que todas as requisições foram tratadas
-- Teste comportamento, não implementação
-- Use descrições claras e em português (Given/When/Then)
+- Use `TestBed` to set up the test environment
+- Use `HttpClientTestingModule` for HTTP tests
+- Use `async/await` for async setup
+- Call `fixture.detectChanges()` after changing properties
+- Use `httpMock.verify()` to ensure all requests were handled
+- Test behavior, not implementation
+- Use clear, descriptive test names (Given/When/Then)

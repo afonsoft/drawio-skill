@@ -1,4 +1,4 @@
-# Template de Teste C# (xUnit + Moq)
+# C# Test Template (xUnit + Moq)
 
 ```csharp
 using Xunit;
@@ -34,10 +34,10 @@ namespace Example.Tests
 }
 ```
 
-## Padrões
+## Patterns
 
 - Use xUnit
-- Use Moq para mocks
+- Use Moq for mocks
 - Given-When-Then pattern
-- Verifique todas as chamadas de mocks
-- Use construtor para setup
+- Verify all mock calls
+- Use constructor for setup

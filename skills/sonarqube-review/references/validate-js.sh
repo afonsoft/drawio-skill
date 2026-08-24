@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script de validação para JavaScript/TypeScript
-# Executa ESLint, Prettier e Vitest/Jest
+# Validation script for JavaScript/TypeScript
+# Runs ESLint, Prettier and Vitest/Jest
 
-echo "Validando JavaScript/TypeScript..."
+echo "Validating JavaScript/TypeScript..."
 
 # ESLint
 npx eslint src/
@@ -12,7 +12,7 @@ npx eslint src/
 # Prettier (formatter)
 npx prettier --check src/
 
-# Vitest/Jest (testes com cobertura)
+# Vitest/Jest (tests with coverage)
 if grep -q "vitest" package.json; then
   npx vitest run --coverage
 elif grep -q "jest" package.json; then
@@ -21,4 +21,4 @@ else
   npm test
 fi
 
-echo "Validação JavaScript/TypeScript concluída."
+echo "JavaScript/TypeScript validation completed."
