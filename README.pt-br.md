@@ -1,5 +1,7 @@
 # Draw.io Architecture Diagrams + MCP Integration (pt-BR)
 
+[![skills.sh](https://skills.sh/b/afonsoft/drawio-skill)](https://skills.sh/afonsoft/drawio-skill)
+
 Um Agent Skill completo que une a **criação de diagramas de arquitetura** para
 o draw.io/diagrams.net com a **integração de primeira classe ao servidor MCP
 oficial do draw.io** (`npx @drawio/mcp`). Gere XML `.drawio` correto para
