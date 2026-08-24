@@ -173,19 +173,27 @@ You can mix them—install via skills.sh for quick setup, then supplement with S
 
 ```
 SKILL.md                       # the skill (trigger, authoring rules, MCP usage)
-references/
-  mcp-config.md                # exact MCP config per platform + self-host + CLI fallback
-  architecture-patterns.md     # worked XML: layered / microservices / client-api-db / C4
-  cloud-icons.md               # AWS / Azure / GCP icon cheatsheet
-  style-guide.md               # palette, typography, effects, legend
-scripts/
-  setup_drawio_mcp.py          # detect platform + write MCP config / generate viewer URL
-  validate_drawio.py           # XML lint + readability score + PNG IEND repair
-docs/
+skills.sh.json                 # skills.sh page customization
+skills/
+  drawio-architecture/         # agentskills.io standard layout
+    SKILL.md                   # skill definition (name: drawio-architecture)
+    references/                # deep reference material
+      mcp-config.md            # exact MCP config per platform + self-host + CLI fallback
+      architecture-patterns.md # worked XML: layered / microservices / client-api-db / C4
+      cloud-icons.md           # AWS / Azure / GCP icon cheatsheet
+      style-guide.md           # palette, typography, effects, legend
+    scripts/                   # helpers
+      setup_drawio_mcp.py      # detect platform + write MCP config / generate viewer URL
+      validate_drawio.py       # XML lint + readability score + PNG IEND repair
+docs/                          # guides (EN + PT-BR)
   configuration.md             # how to configure the skill & MCP
+  configuration.pt-br.md
   usage.md                     # how to use the skill (workflow)
+  usage.pt-br.md
   tools.md                     # MCP tools reference
+  tools.pt-br.md
   examples.md                  # end-to-end usage examples
+  examples.pt-br.md
 ```
 
 ## References
@@ -201,10 +209,12 @@ docs/
 - Workflow article — https://dev.to/rushier/how-to-use-claude-ai-drawio-to-create-architecture-diagrams-for-projects-17i1
 
 **This repository**
-- `SKILL.md` — skill definition
-- `docs/configuration.md`, `docs/usage.md`, `docs/tools.md`, `docs/examples.md` — guides
-- `references/*.md` — deep reference material
-- `scripts/*.py` — helpers
+- `SKILL.md` — skill definition (root for skills.sh, `skills/drawio-architecture/SKILL.md` for agentskills.io)
+- `skills.sh.json` — skills.sh page customization
+- `skills/drawio-architecture/` — agentskills.io standard layout (SKILL.md, references/, scripts/)
+- `docs/` — guides in English and Portuguese
+- `references/` — deep reference material (in skill folder)
+- `scripts/` — helpers (in skill folder)
 
 ## License
 

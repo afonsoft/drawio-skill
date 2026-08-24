@@ -159,19 +159,27 @@ Você pode misturar — instale via skills.sh para configuração rápida, depoi
 
 ```
 SKILL.md                       # a skill (gatilho, regras de authoring, uso do MCP)
-references/
-  mcp-config.md                # config MCP exata por plataforma + self-host + fallback CLI
-  architecture-patterns.md     # XML pronto: layered / microservices / client-api-db / C4
-  cloud-icons.md               # cheatsheet de ícones AWS / Azure / GCP
-  style-guide.md               # paleta, tipografia, efeitos, legenda
-scripts/
-  setup_drawio_mcp.py          # detecta plataforma + escreve config MCP / gera viewer URL
-  validate_drawio.py           # lint XML + score de legibilidade + reparo IEND de PNG
-docs/
-  configuration.pt-br.md       # como configurar a skill e o MCP
-  usage.pt-br.md               # como usar a skill (fluxo de trabalho)
-  tools.pt-br.md               # referência das ferramentas MCP
-  examples.pt-br.md            # exemplos de uso ponta a ponta
+skills.sh.json                 # personalização da página skills.sh
+skills/
+  drawio-architecture/         # layout padrão agentskills.io
+    SKILL.md                   # definição da skill (name: drawio-architecture)
+    references/                # material de referência profunda
+      mcp-config.md            # config MCP exata por plataforma + self-host + fallback CLI
+      architecture-patterns.md # XML pronto: layered / microservices / client-api-db / C4
+      cloud-icons.md           # cheatsheet de ícones AWS / Azure / GCP
+      style-guide.md           # paleta, tipografia, efeitos, legenda
+    scripts/                   # helpers
+      setup_drawio_mcp.py      # detecta plataforma + escreve config MCP / gera viewer URL
+      validate_drawio.py       # lint XML + score de legibilidade + reparo IEND de PNG
+docs/                          # guias (EN + PT-BR)
+  configuration.md             # como configurar a skill e o MCP
+  configuration.pt-br.md
+  usage.md                     # como usar a skill (fluxo de trabalho)
+  usage.pt-br.md
+  tools.md                     # referência das ferramentas MCP
+  tools.pt-br.md
+  examples.md                  # exemplos de uso ponta a ponta
+  examples.pt-br.md
 ```
 
 ## Referências
@@ -187,10 +195,12 @@ docs/
 - Artigo de fluxo de trabalho — https://dev.to/rushier/how-to-use-claude-ai-drawio-to-create-architecture-diagrams-for-projects-17i1
 
 **Este repositório**
-- `SKILL.md` — definição da skill
-- `docs/configuration.pt-br.md`, `docs/usage.pt-br.md`, `docs/tools.pt-br.md`, `docs/examples.pt-br.md` — guias
-- `references/*.md` — material de referência profunda
-- `scripts/*.py` — helpers
+- `SKILL.md` — definição da skill (raiz para skills.sh, `skills/drawio-architecture/SKILL.md` para agentskills.io)
+- `skills.sh.json` — personalização da página skills.sh
+- `skills/drawio-architecture/` — layout padrão agentskills.io (SKILL.md, references/, scripts/)
+- `docs/` — guias em inglês e português
+- `references/` — material de referência profunda (na pasta da skill)
+- `scripts/` — helpers (na pasta da skill)
 
 ## Licença
 
