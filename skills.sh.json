@@ -27,6 +27,13 @@
         "create-readme",
         "building-mcp-servers"
       ]
+    },
+    {
+      "title": "Knowledge & Notes",
+      "description": "Skills for working with knowledge bases and note-taking tools.",
+      "skills": [
+        "obsidian"
+      ]
     }
   ]
 }
