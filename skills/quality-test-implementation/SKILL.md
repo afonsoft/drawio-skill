@@ -121,6 +121,18 @@ Refactor only when it reduces warnings or improves testability.
 
 ## Phase 4 — Tests and Coverage
 
+For framework-specific commands (xUnit/NUnit/MSTest, Maven/Gradle, pytest/unittest), thresholds, and HTML reports, see the `references/` files:
+
+- `references/coverage-dotnet.md`
+- `references/coverage-java.md`
+- `references/coverage-python.md`
+
+Use the auxiliary dispatcher to auto-detect the stack and run coverage:
+
+```bash
+bash references/run-coverage.sh
+```
+
 ### .NET
 ```bash
 dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults
@@ -200,6 +212,13 @@ Use **Conventional Commits**:
 | Auto-opening the PR | User loses control of merge timing | Generate the summary; let the user open the PR |
 | New tests before fixing red suite | Unstable baseline, false confidence | Stabilize existing failures first |
 | Skip coverage report | No evidence target was met | Always emit `cobertura`/`jacoco`/`xml` coverage |
+
+## References
+
+- `references/coverage-dotnet.md` — .NET coverage (xUnit/NUnit/MSTest, Coverlet, reportgenerator, thresholds).
+- `references/coverage-java.md` — Java coverage (Maven JaCoCo, Gradle JaCoCo, thresholds).
+- `references/coverage-python.md` — Python coverage (pytest-cov, unittest + coverage.py, mypy, thresholds).
+- `references/run-coverage.sh` — Stack-detecting dispatcher that runs the right coverage command.
 
 ## See Also
 

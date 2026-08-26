@@ -3,10 +3,29 @@
   "notGrouped": "bottom",
   "groupings": [
     {
+      "title": "Code Quality & Testing",
+      "description": "Skills for reviewing code, fixing static analysis, raising test coverage, and observing production behavior.",
+      "skills": [
+        "code-review-and-quality",
+        "sonarqube-review",
+        "quality-test-implementation",
+        "observability-and-instrumentation"
+      ]
+    },
+    {
       "title": "Draw.io Architecture",
       "description": "Agent skill for generating architecture diagrams with draw.io MCP integration",
       "skills": [
         "drawio-architecture"
+      ]
+    },
+    {
+      "title": "Project & Agent Setup",
+      "description": "Skills for bootstrapping agent harnesses, generating documentation, and building MCP servers.",
+      "skills": [
+        "create-agent-harness",
+        "create-readme",
+        "building-mcp-servers"
       ]
     }
   ]

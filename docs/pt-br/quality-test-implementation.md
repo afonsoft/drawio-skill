@@ -8,6 +8,8 @@ Estabilizar o build, corrigir avisos de análise estática (Roslyn/Sonar, SpotBu
 3. **Arquitetura**: Aplicar SOLID, DDD e Clean Architecture apenas onde reduz avisos ou melhora a testabilidade.
 4. **Testes e Cobertura**: Estabilizar a suíte, adicionar testes estilo BDD, atingir metas por linguagem (.NET/Python 90%, Java 85%).
 5. **Entrega**: Atualizar README/CHANGELOG, usar Conventional Commits, emitir um Resumo Técnico Detalhado — o usuário abre o PR manualmente.
+
+Os detalhes de cobertura por linguagem (opções de framework, limites, relatórios HTML) ficam em `skills/quality-test-implementation/references/coverage-{dotnet,java,python}.md`, além de um dispatcher `run-coverage.sh` com auto-detecção.
 ## 🚀 Uso
 Use quando um repositório acumulou avisos, baixa cobertura ou CVEs e precisa de um esforço de qualidade em todo o repositório. Para uma única alteração, use `code-review-and-quality`; para remediação automatizada do SonarQube, use `sonarqube-review`.
 ## 🔗 Correlação
