@@ -55,10 +55,17 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
       - name: Install skill-validator
-        run: brew install agent-ecosystem/tap/skill-validator
+        run: go install github.com/agent-ecosystem/skill-validator/cmd/skill-validator@latest
 
       - name: Validate skills
+        env:
+          PATH: ${{ env.PATH }}:$(go env GOPATH)/bin
         run: |
           skill-validator check --strict --emit-annotations skills/
           skill-validator check --strict -o markdown skills/ >> "$GITHUB_STEP_SUMMARY"
