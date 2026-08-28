@@ -50,6 +50,25 @@ cd ~/.opencode/skills/capafy-publisher
 python3 packager.py publish-init --env claude_code --runtime-dir /path/to/skills --skill-dir /path/to/skills/skill-name
 ```
 
+## 📣 Publish on Skill Directories
+
+### SkillsLLM
+[SkillsLLM](https://skillsllm.com/) indexes open-source skills for Claude Code, Codex CLI, and ChatGPT. Sign in with GitHub and submit this repository through [Submit a Skill](https://skillsllm.com/submit). Submissions are security-scanned before listing.
+
+### Awesome Skills
+[Awesome Skills](https://awesomeskill.ai/) discovers open-source `SKILL.md` skills from GitHub. Keep each skill in its own directory with a valid `SKILL.md`, optional `scripts/`, `references/`, or `assets/`, and a repository README. Submit the repository through the site's **Submit a Skill** form for directory listing.
+
+### SkillHub
+[SkillHub](https://www.skill-marketplace.com/) aggregates skills from GitHub sources. Open **Sources** → **Add Source**, then use:
+
+- **Name:** `afonsoft/skills`
+- **Repository URL:** `https://github.com/afonsoft/skills`
+- **Source Type:** `GitHub Repo`
+- **Branch:** `main`
+- **Skills Path:** `/skills`
+
+SkillHub imports the collection from this source and lists each valid `SKILL.md` directory in its marketplace.
+
 ## 📖 How to use
 
 1. **Install** the collection using one of the methods above.
