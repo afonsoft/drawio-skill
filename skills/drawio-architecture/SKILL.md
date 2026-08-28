@@ -6,13 +6,8 @@ compatibility: MCP mode needs Node.js + `npx @drawio/mcp` (or a self-hosted draw
 metadata:
   homepage: https://github.com/jgraph/drawio-mcp
   author: merged from Agents365-ai/drawio-skill, scarr05/claude-skills-pub, jgraph/drawio-mcp
-  version: 1.0.0
-  sources:
-    - https://github.com/Agents365-ai/drawio-skill
-    - https://github.com/scarr05/claude-skills-pub
-    - https://www.drawio.com/docs/manual/generate/drawio-mcp-server/
-    - https://dev.to/rushier/how-to-use-claude-ai-drawio-to-create-architecture-diagrams-for-projects-17i1
-    - https://github.com/jgraph/drawio-mcp
+  version: "1.0.0"
+  sources: https://github.com/Agents365-ai/drawio-skill, https://github.com/scarr05/claude-skills-pub, https://www.drawio.com/docs/manual/generate/drawio-mcp-server/, https://dev.to/rushier/how-to-use-claude-ai-drawio-to-create-architecture-diagrams-for-projects-17i1, https://github.com/jgraph/drawio-mcp
 ---
 
 # Draw.io Architecture Diagrams + MCP Integration

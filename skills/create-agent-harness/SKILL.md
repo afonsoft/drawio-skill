@@ -7,7 +7,7 @@ metadata:
   visibility: public
   author: afonsoft
   url: https://github.com/afonsoft/skills
-  user-invokable: true
+  user-invokable: "true"
   argument-hint: "[repo-path]"
 ---
 

@@ -7,8 +7,8 @@ metadata:
   visibility: public
   author: afonsoft
   url: https://github.com/afonsoft/skills
-  subagent: false
-  user-invokable: true
+  subagent: "false"
+  user-invokable: "true"
   argument-hint: "<project-name> [--new-code-only] [--issues=<issue-id1,issue-id2,...>]"
 ---
 

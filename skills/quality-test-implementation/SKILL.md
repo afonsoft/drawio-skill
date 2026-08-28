@@ -7,8 +7,8 @@ metadata:
   visibility: public
   author: afonsoft
   url: https://github.com/afonsoft/skills
-  subagent: false
-  user-invokable: true
+  subagent: "false"
+  user-invokable: "true"
   argument-hint: "<repo-name> [--language=dotnet|java|python] [--base=main] [--output-branch=feature/YYYYMMDD-name]"
 ---
 
