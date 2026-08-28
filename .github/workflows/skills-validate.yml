@@ -11,7 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate:
+  validate-spec:
+    name: Validate Spec (skills-ref)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -43,5 +44,19 @@ jobs:
                   print(f"  - {error}")
 
           if failures:
-              raise SystemExit(f"{failures} skill(s) failed validation")
+              raise SystemExit(f"{failures} skill(s) failed spec validation")
           PY
+
+  validate-quality:
+    name: Validate Quality (skill-validator)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install skill-validator
+        run: brew install agent-ecosystem/tap/skill-validator
+
+      - name: Validate skills
+        run: |
+          skill-validator check --strict --emit-annotations skills/
+          skill-validator check --strict -o markdown skills/ >> "$GITHUB_STEP_SUMMARY"
