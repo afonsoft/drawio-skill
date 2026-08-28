@@ -2,14 +2,14 @@
 name: sonarqube-review
 license: UNLICENSED
 description: Use when fixing SonarQube code quality issues automatically across any language or framework
-author: afonsoft
-url: https://github.com/afonsoft/skills
-subagent: false
-user-invokable: true
-argument-hint: "<project-name> [--new-code-only] [--issues=<issue-id1,issue-id2,...>]"
 metadata:
   version: "1.0.0"
   visibility: public
+  author: afonsoft
+  url: https://github.com/afonsoft/skills
+  subagent: false
+  user-invokable: true
+  argument-hint: "<project-name> [--new-code-only] [--issues=<issue-id1,issue-id2,...>]"
 ---
 
 # SonarQube Review Skill

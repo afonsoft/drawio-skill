@@ -2,12 +2,11 @@
 name: create-readme
 license: UNLICENSED
 description: Use when generating or updating professional README.md and CHANGELOG.md files for a project. Covers repository analysis, stack detection, and alignment with Keep a Changelog and SemVer standards. Do NOT use for API-reference docs (use dedicated doc tooling) or for licenses/governance documents.
-author: afonsoft
-url: https://github.com/afonsoft/skills
 metadata:
   version: "1.0.0"
   visibility: public
   author: afonsoft
+  url: https://github.com/afonsoft/skills
 ---
 
 # Create README and CHANGELOG

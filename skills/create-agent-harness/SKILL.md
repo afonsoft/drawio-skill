@@ -2,14 +2,13 @@
 name: create-agent-harness
 license: UNLICENSED
 description: Bootstrap a complete production-ready agent harness in a repository — CLAUDE.md, .claude/, .devin/, skills/, rules/, ignore files, and sub-agents. Use when initializing AI agent support in a new repo, restructuring existing agent files into modern File-based Context conventions, or generating harness artifacts following Agent = Model + Harness principles. Targets Claude Code and Devin CLI only — does NOT create artifacts for OpenCode, Cursor, Gemini, Copilot or JetBrains AI. Do NOT use for building MCP servers (use building-mcp-servers).
-author: afonsoft
-url: https://github.com/afonsoft/skills
-user-invokable: true
-argument-hint: "[repo-path]"
 metadata:
   version: "1.1.0"
   visibility: public
   author: afonsoft
+  url: https://github.com/afonsoft/skills
+  user-invokable: true
+  argument-hint: "[repo-path]"
 ---
 
 # Create Agent Harness

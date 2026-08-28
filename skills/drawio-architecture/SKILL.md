@@ -2,9 +2,9 @@
 name: drawio-architecture
 description: Use when generating architecture diagrams, system/service diagrams, network topology, cloud architecture, flowcharts, ER diagrams, or any draw.io/diagrams.net visualization, AND you need to wire up the official draw.io MCP server (npx @drawio/mcp) or actually open diagrams through MCP tools (open_drawio_xml, open_drawio_mermaid, open_drawio_csv, search_shapes, list/get/set_page). Covers MCP server configuration across Claude Desktop, Claude Code, VS Code/Copilot, Cursor, OpenCode and other stdio MCP clients, plus native .drawio XML authoring (layered/swimlane/nested-container layouts, cloud icons, edge routing, libavoid/ELK layout passes).
 license: MIT
-homepage: https://github.com/jgraph/drawio-mcp
 compatibility: MCP mode needs Node.js + `npx @drawio/mcp` (or a self-hosted draw.io instance via DRAWIO_BASE_URL). Local export mode needs the draw.io desktop CLI on PATH. Works on macOS/Linux/Windows.
 metadata:
+  homepage: https://github.com/jgraph/drawio-mcp
   author: merged from Agents365-ai/drawio-skill, scarr05/claude-skills-pub, jgraph/drawio-mcp
   version: 1.0.0
   sources:

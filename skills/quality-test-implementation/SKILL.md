@@ -2,15 +2,14 @@
 name: quality-test-implementation
 license: UNLICENSED
 description: Use when improving code quality, reducing technical debt, or raising test coverage in .NET, Java, or Python repositories — fixing static-analysis warnings (Roslyn/Sonar, SpotBugs/Checkstyle, Bandit/Ruff), resolving security CVEs, and applying SOLID/DDD/Clean Architecture. Do NOT use for a single-file cosmetic edit, a focused review of one change, or as a substitute for `code-review-and-quality`; this is a whole-repo quality intervention, not a localized fix.
-author: afonsoft
-url: https://github.com/afonsoft/skills
-subagent: false
-user-invokable: true
-argument-hint: "<repo-name> [--language=dotnet|java|python] [--base=main] [--output-branch=feature/YYYYMMDD-name]"
 metadata:
   version: "1.0.0"
   visibility: public
   author: afonsoft
+  url: https://github.com/afonsoft/skills
+  subagent: false
+  user-invokable: true
+  argument-hint: "<repo-name> [--language=dotnet|java|python] [--base=main] [--output-branch=feature/YYYYMMDD-name]"
 ---
 
 # Multi-Language Code Quality & Test Coverage

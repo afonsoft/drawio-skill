@@ -1,0 +1,48 @@
+name: Skills Validation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install skills-ref
+        run: pip install --quiet skills-ref
+
+      - name: Validate all skills
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from skills_ref.validator import validate
+
+          failures = 0
+          for skill in sorted(Path("skills").glob("*/")):
+              errors = validate(skill)
+              if not errors:
+                  print(f"OK   {skill.name}")
+                  continue
+
+              failures += 1
+              print(f"FAIL {skill.name}:")
+              for error in errors:
+                  print(f"  - {error}")
+
+          if failures:
+              raise SystemExit(f"{failures} skill(s) failed validation")
+          PY

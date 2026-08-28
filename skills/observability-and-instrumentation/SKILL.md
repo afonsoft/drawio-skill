@@ -2,12 +2,11 @@
 name: observability-and-instrumentation
 license: UNLICENSED
 description: Use when adding logging, metrics, tracing, or alerting to code that runs in production, or when a production incident couldn't be diagnosed from available data. Makes system behavior visible and diagnosable. Do NOT use for live debugging of an ongoing failure (use debugging-and-error-recovery), profiling/optimization (use performance-optimization), or launch-day monitoring checklists (use shipping-and-launch).
-author: afonsoft
-url: https://github.com/afonsoft/skills
 metadata:
   version: "1.0.0"
   visibility: public
   author: afonsoft
+  url: https://github.com/afonsoft/skills
 ---
 
 # Observability and Instrumentation

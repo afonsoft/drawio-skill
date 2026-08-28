@@ -38,16 +38,16 @@ The fastest way to install and auto-detect your environment.
 npx skills add afonsoft/skills
 ```
 
-### 🏛️ via Agent Skills (agentskills.io)
-For structured, curated installation.
+### 🌐 via Capafy Marketplace
+Publish and earn from your skills on Capafy.
 ```bash
-npx agent-skills add afonsoft/skills
-```
+# Install Capafy Publisher
+curl -sL "https://api.capafy.ai/public/capafy-publisher.zip" -o capafy.zip
+unzip -q capafy.zip -d ~/.opencode/skills/capafy-publisher
 
-### 🌐 via SkillsMP
-Community-driven discovery and installation.
-```bash
-npx skillsmp add afonsoft/skills
+# Publish a skill
+cd ~/.opencode/skills/capafy-publisher
+python3 packager.py publish-init --env claude_code --runtime-dir /path/to/skills --skill-dir /path/to/skills/skill-name
 ```
 
 ## 📖 How to use
@@ -58,3 +58,6 @@ npx skillsmp add afonsoft/skills
 
 ## ⚖️ License
 MIT - See `LICENSE`.
+
+## 📊 Skills Catalog
+Browse all available skills at [skills.sh](https://www.skills.sh/?q=afonsoft).
