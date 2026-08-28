@@ -66,5 +66,10 @@ SkillHub imports the collection from this source and lists each valid `SKILL.md`
 ## ⚖️ License
 MIT - See `LICENSE`.
 
+## 🛠️ Skill Development Tools
+
+### skillxp
+[skillxp](https://skillxp.dev/) observes skill loading behavior across harnesses (Claude Code, Codex CLI, Antigravity). Stage a skill in a fresh fixture, invoke the harness headlessly, and see what actually reached the model with transcript evidence. Install via `brew install agent-ecosystem/tap/skillxp` or `npm install -g skillxp`. Use `skillxp harnesses` to list supported platforms and `skillxp observe -harness <name> -install ./my-skill ...` to trace skill activation and phrase loading.
+
 ## 📊 Skills Catalog
 Browse all available skills at [skills.sh](https://www.skills.sh/?q=afonsoft).
