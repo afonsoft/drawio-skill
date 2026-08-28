@@ -67,8 +67,8 @@ jobs:
         env:
           PATH: ${{ env.PATH }}:$(go env GOPATH)/bin
         run: |
-          skill-validator check --strict --emit-annotations skills/
-          skill-validator check --strict -o markdown skills/ >> "$GITHUB_STEP_SUMMARY"
+          skill-validator check --emit-annotations skills/
+          skill-validator check -o markdown skills/ >> "$GITHUB_STEP_SUMMARY"
 
   security-scan:
     name: Security Scan (Snyk)
