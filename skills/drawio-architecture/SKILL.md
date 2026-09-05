@@ -302,8 +302,7 @@ For AWS/Azure/GCP/Cisco/K8s, prefer official icons. With MCP, call `search_shape
 
 ## References (this skill)
 
-- `references/mcp-config.md` — exact MCP config JSON per platform + self-host + headless/CLI fallback
-- `references/mcp-configuration.md` — detailed configuration guide (en) / `mcp-configuration.pt-br.md` (pt-BR)
+- `references/mcp-config.md` — exact MCP config JSON per platform + self-host + headless/CLI fallback + automated setup + verify steps
 - `references/mcp-tools-reference.md` — full MCP tools reference with parameters and examples (en) / `mcp-tools-reference.pt-br.md` (pt-BR)
 - `references/usage-guide.md` — how to drive the skill once configured (en) / `usage-guide.pt-br.md` (pt-BR)
 - `references/usage-examples.md` — end-to-end usage examples (en) / `usage-examples.pt-br.md` (pt-BR)
