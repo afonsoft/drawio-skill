@@ -79,6 +79,28 @@ O `description` de cada skill inclui `afonsoft` para que a coleção seja pesqui
 
 SkillHub importa a coleção desta fonte e lista cada diretório `SKILL.md` válido em seu marketplace.
 
+### LobeHub Skills Marketplace
+[LobeHub](https://lobehub.com/skills) é o maior marketplace de skills do mundo (100.000+ skills). A publicação é via CLI (sem formulário web). Cada skill recebe o identificador `afonsoft-skills-<nome>`.
+
+**Configuração única (por máquina, requer Node.js >= 22):**
+```bash
+npx -y @lobehub/market-cli login           # OAuth no navegador
+npx -y @lobehub/market-cli github connect  # verificar propriedade do GitHub
+```
+
+**Publicar todas as skills:**
+```bash
+./publish-lobehub.sh          # publica todas as 11 skills
+./publish-lobehub.sh --dry-run # preview sem publicar
+```
+
+**Publicar uma skill individual:**
+```bash
+npx -y @lobehub/market-cli skill publish --dir skills/<nome-da-skill>
+```
+
+Após publicar, as skills aparecem em `market.lobehub.com/s/skills/afonsoft-skills-<nome>` e são pesquisáveis em [lobehub.com/skills?q=afonsoft](https://lobehub.com/skills?q=afonsoft).
+
 ## 📖 Como usar
 
 1. **Instale** a coleção usando um dos métodos acima.
