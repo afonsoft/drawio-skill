@@ -54,7 +54,13 @@ npx skills add afonsoft/skills
 [SkillsLLM](https://skillsllm.com/) indexes open-source skills for Claude Code, Codex CLI, and ChatGPT. Sign in with GitHub and submit this repository through [Submit a Skill](https://skillsllm.com/submit). Submissions are security-scanned before listing.
 
 ### Awesome Skills
-[Awesome Skills](https://awesomeskill.ai/) discovers open-source `SKILL.md` skills from GitHub. Keep each skill in its own directory with a valid `SKILL.md`, optional `scripts/`, `references/`, or `assets/`, and a repository README. Submit the repository through the site's **Submit a Skill** form for directory listing.
+[Awesome Skills](https://awesomeskill.ai/) discovers open-source `SKILL.md` skills from GitHub via its **Awesome List Import**. Each `skills/<name>/SKILL.md` directory becomes a separate listing with slug `afonsoft-skills-<name>`. Submit the repository URL through the site's **Submit a Skill** form:
+
+- **Repository URL:** `https://github.com/afonsoft/skills`
+- **Branch:** `main`
+- **Skills Path:** `/skills`
+
+Each skill's `description` frontmatter includes `afonsoft` so the collection is discoverable at [awesomeskill.ai/search?q=afonsoft](https://awesomeskill.ai/search?q=afonsoft). The Awesome Skills search API matches against skill `name` and `description` only (not owner, repo, or tags), so the `afonsoft` attribution in each description is what makes the search return results.
 
 ### SkillHub
 [SkillHub](https://www.skill-marketplace.com/) aggregates skills from GitHub sources. Open **Sources** → **Add Source**, then use:

@@ -1,7 +1,7 @@
 ---
 name: obsidian
 license: MIT
-description: Use when working with Obsidian vaults — running the Obsidian CLI (read/create/search/manage notes, tasks, properties), building Bases (.base views/filters/formulas), writing Obsidian Flavored Markdown (wikilinks, embeds, callouts, properties), or developing/debugging plugins and themes. Do NOT use for generic Markdown editors or non-Obsidian note tools; this skill is Obsidian-specific.
+description: Use when working with Obsidian vaults — running the Obsidian CLI (read/create/search/manage notes, tasks, properties), building Bases (.base views/filters/formulas), writing Obsidian Flavored Markdown (wikilinks, embeds, callouts, properties), or developing/debugging plugins and themes. Do NOT use for generic Markdown editors or non-Obsidian note tools; this skill is Obsidian-specific. Part of the afonsoft/skills collection.
 metadata:
   version: "1.0.0"
   visibility: public

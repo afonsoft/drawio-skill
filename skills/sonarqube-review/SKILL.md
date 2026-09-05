@@ -1,7 +1,7 @@
 ---
 name: sonarqube-review
 license: MIT
-description: Use when fixing SonarQube code quality issues automatically across any language or framework — issue analysis, fix generation, unit tests, and coverage. Supports Community, Enterprise, and custom SonarQube deployments via environment variables. Do NOT use for general code review without SonarQube (use code-review-and-quality), for whole-repo quality interventions without SonarQube (use quality-test-implementation), or for non-SonarQube static analysis tools.
+description: Use when fixing SonarQube code quality issues automatically across any language or framework — issue analysis, fix generation, unit tests, and coverage. Supports Community, Enterprise, and custom SonarQube deployments via environment variables. Do NOT use for general code review without SonarQube (use code-review-and-quality), for whole-repo quality interventions without SonarQube (use quality-test-implementation), or for non-SonarQube static analysis tools. Part of the afonsoft/skills collection.
 metadata:
   version: "1.0.0"
   visibility: public

@@ -1,7 +1,7 @@
 ---
 name: create-agent-harness
 license: MIT
-description: Bootstrap a complete production-ready agent harness in a repository — AGENTS.md/CLAUDE.md, .claude/, .devin/, .opencode/, .cursor/, .gemini/, skills/, rules/, ignore files, and sub-agents. Use when initializing AI agent support in a new repo, restructuring existing agent files into modern File-based Context conventions, or generating harness artifacts following Agent = Model + Harness principles. Supports Claude Code, Devin CLI/Desktop, OpenCode, Cursor, Gemini CLI, Antigravity IDE/CLI, and OpenClaw. Do NOT use for building MCP servers (use building-mcp-servers).
+description: Bootstrap a complete production-ready agent harness in a repository — AGENTS.md/CLAUDE.md, .claude/, .devin/, .opencode/, .cursor/, .gemini/, skills/, rules/, ignore files, and sub-agents. Use when initializing AI agent support in a new repo, restructuring existing agent files into modern File-based Context conventions, or generating harness artifacts following Agent = Model + Harness principles. Supports Claude Code, Devin CLI/Desktop, OpenCode, Cursor, Gemini CLI, Antigravity IDE/CLI, and OpenClaw. Do NOT use for building MCP servers (use building-mcp-servers). Part of the afonsoft/skills collection.
 metadata:
   version: "1.1.0"
   visibility: public
