@@ -69,6 +69,58 @@ jobs:
         run: |
           skill-validator check --emit-annotations -o markdown skills/ >> "$GITHUB_STEP_SUMMARY" || true
 
+  validate-spec-action:
+    name: Validate Spec (validate-skill)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Validate each skill
+        uses: Flash-Brew-Digital/validate-skill@v1
+        with:
+          path: ./skills
+          validate-references: true
+          fail-on-warning: false
+
+  validate-quality-skillcheck:
+    name: Validate Quality (skillcheck)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install skillcheck
+        run: pip install --quiet skillcheck
+
+      - name: Run skillcheck
+        run: |
+          # --skip-ref-check: avoids false positives for npm/package names in markdown
+          # --ignore frontmatter.field.ecosystem: license/metadata are ecosystem-common, not spec errors
+          # --ignore disclosure.metadata-budget: advisory only, frontmatter is intentionally detailed
+          # --format github: emits ::notice/::warning annotations visible in PR files tab
+          skillcheck skills/ \
+            --skip-ref-check \
+            --ignore frontmatter.field.ecosystem \
+            --ignore disclosure.metadata-budget \
+            --format github \
+            >> "$GITHUB_STEP_SUMMARY" || true
+
+          # Re-run in quiet mode for exit code (only hard errors fail)
+          skillcheck skills/ \
+            --skip-ref-check \
+            --ignore frontmatter.field.ecosystem \
+            --ignore disclosure.metadata-budget \
+            --ignore frontmatter.field.unknown \
+            --ignore frontmatter.description.person-voice \
+            --ignore disclosure.body-budget \
+            --ignore sizing.body.line-count \
+            --ignore description.quality-score \
+            -q
+
   security-scan:
     name: Security Scan (Snyk)
     runs-on: ubuntu-latest
