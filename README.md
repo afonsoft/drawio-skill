@@ -34,9 +34,9 @@ The skills are organized into four main pillars: **Harness Engineering**, **Code
 - **`drawio-architecture`**: Visual intelligence. Merges architecture diagram authoring with the official draw.io MCP server for automated system design.
 
 ### 🔗 MCP Integrations
-*Configuring, authenticating, and using external MCP servers.*
-- **`composio-mcp`**: Connects AI agents to 1000+ external apps (Gmail, GitHub, Slack, Notion, Linear, Jira) via Composio. CLI-first path (`ak_*` project key) with MCP fallback (`ck_*` consumer key via `x-consumer-api-key` header). Includes setup and verify scripts, per-platform config reference, and troubleshooting for the `ck_` vs `ak_` auth boundary.
-- **`notebooklm-mcp`**: Google NotebookLM (Gemini Notebook) integration via the `nlm` CLI and `notebooklm-mcp` server. Cookie-based auth for headless servers with two methods (OpenClaw CDP provider + manual `cookies.txt` file) and a desktop auto-mode fallback. Includes verify and cookie-extraction helper scripts, plus per-platform MCP config reference.
+*Configuring, authenticating, and using external MCP servers across all supported agent platforms.*
+- **`composio-mcp`**: Connects AI agents to 1000+ external apps (Gmail, GitHub, Slack, Notion, Linear, Jira) via Composio. CLI-first path (`ak_*` project key) with MCP fallback (`ck_*` consumer key via `x-consumer-api-key` header). Includes multi-platform setup script (handles `serverUrl` vs `url`, `mcp` vs `mcpServers`, `environment` vs `env` across Claude Code/Desktop, Cursor, Devin CLI/Desktop, OpenCode, Antigravity IDE/CLI, OpenClaw), verify script, per-platform config reference, and cross-platform quirks matrix.
+- **`notebooklm-mcp`**: Google NotebookLM (Gemini Notebook) integration via the `nlm` CLI and `notebooklm-mcp` server. Cookie-based auth for headless servers with three methods (OpenClaw CDP provider preferred, manual `cookies.txt` file, desktop auto + copy) and multi-platform setup script covering all 8 supported agent platforms. Includes verify, cookie-extraction helper, per-platform config reference, and cross-platform quirks matrix.
 
 ---
 

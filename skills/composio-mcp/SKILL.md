@@ -171,26 +171,42 @@ Then export in your shell profile (`~/.bashrc` / `~/.zshrc`):
 export COMPOSIO_CONSUMER_KEY="ck_your_consumer_key_here"
 ```
 
-### Per-platform config file locations
+### Per-platform config — critical gotchas
 
-| Platform | File |
-|----------|------|
-| Claude Code | `~/.claude.json` → `mcpServers.composio` |
-| Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) / `%APPDATA%\Claude\claude_desktop_config.json` (Windows) |
-| Cursor | `~/.cursor/mcp.json` |
-| VS Code / Copilot | `.vscode/mcp.json` (workspace) or user settings |
-| OpenCode | `~/.opencode/config.json` → `mcpServers` |
-| Devin CLI | `~/.config/devin/mcp-servers.json` → `mcpServers` |
-| Gemini CLI | `~/.gemini/settings.json` → `mcpServers` |
+Each MCP client platform has its own config format. Getting field names wrong causes the server to be **silently ignored** (no error, just no tools). See **`references/platform-quirks.md`** for the full matrix.
+
+| Platform | Config file | Root key | URL field | Gotcha |
+|----------|-------------|----------|-----------|--------|
+| Claude Code | `~/.claude.json` | `mcpServers` | `url` | `type: "http"` |
+| Claude Desktop | `claude_desktop_config.json` | `mcpServers` | `url` | — |
+| Cursor | `~/.cursor/mcp.json` | `mcpServers` | `url` | — |
+| Devin CLI | `~/.config/devin/mcp_config.json` | `mcpServers` | `url` | `devin mcp add` CLI |
+| Devin Desktop | `~/.devin/mcp_config.json` | `mcpServers` | **`serverUrl`** | NOT `url`! |
+| OpenCode | `~/.config/opencode/opencode.json` | **`mcp`** | `url` | `type: "remote"`, `environment` not `env` |
+| Antigravity IDE/CLI | `~/.gemini/config/mcp_config.json` | `mcpServers` | **`serverUrl`** | NOT `url`! Clear cache on uninstall |
+| OpenClaw | OpenClaw config | **`mcp.servers`** | `url` | `transport: "streamable-http"`, `openclaw mcp add` CLI |
+
+> **Top 3 silent-failure traps:**
+> 1. **Devin Desktop / Antigravity** use `serverUrl` (not `url`) — using `url` = silently ignored.
+> 2. **OpenCode** uses `mcp` (not `mcpServers`), `environment` (not `env`), `command` as single array.
+> 3. **OpenCode** env substitution uses `{env:VAR}` not `${VAR}`.
+
+See **`references/mcp-config.md`** for the exact JSON block per platform.
 
 ### Automated setup helper
 
-Run the bundled helper to detect the platform and patch the right config file:
+Run the bundled helper to detect **all** installed platforms and patch each one with the correct format (handles `serverUrl` vs `url`, `mcp` vs `mcpServers`, `environment` vs `env`, and OpenClaw CLI):
 
 ```bash
 bash skills/composio-mcp/scripts/setup_composio_mcp.sh
 # or with the key inline:
 COMPOSIO_CONSUMER_KEY=ck_xxx bash skills/composio-mcp/scripts/setup_composio_mcp.sh
+# dry-run (show what would change):
+COMPOSIO_CONSUMER_KEY=ck_xxx bash skills/composio-mcp/scripts/setup_composio_mcp.sh --dry-run
+# target one platform:
+bash skills/composio-mcp/scripts/setup_composio_mcp.sh --platform cursor
+# remove:
+bash skills/composio-mcp/scripts/setup_composio_mcp.sh --remove
 ```
 
 ## B.3 Verify the MCP server
@@ -272,10 +288,16 @@ When enabled, MCP requests must include **both** `x-consumer-api-key` (ck_) and 
 
 # References
 
-- **`references/mcp-config.md`** — Full per-platform JSON config blocks (Claude Code/Desktop, Cursor, VS Code, OpenCode, Devin, Gemini).
+- **`references/mcp-config.md`** — Full per-platform JSON config blocks (Claude Code/Desktop, Cursor, Devin CLI/Desktop, OpenCode, Antigravity IDE/CLI, OpenClaw).
+- **`references/platform-quirks.md`** — Cross-platform MCP config quirks matrix (serverUrl vs url, mcp vs mcpServers, environment vs env, env substitution syntax, OpenClaw CDP ports).
 - **`references/troubleshooting.md`** — Extended troubleshooting (CLI cache, pending-login, org picker, `composio dev` projects).
-- **`scripts/setup_composio_mcp.sh`** — Detects platform, patches the right MCP config file with the consumer key.
+- **`scripts/setup_composio_mcp.sh`** — Detects all installed platforms and patches each with the correct format (handles serverUrl/url, mcp/mcpServers, environment/env, OpenClaw CLI).
 - **`scripts/verify_composio.sh`** — Runs `whoami` + curl initialize probe + lists a few tools to confirm end-to-end.
 - [Composio Connect docs](https://docs.composio.dev/docs/composio-connect)
 - [Consumer vs project key boundaries](https://docs.composio.dev/kb/guide/consumer-project-boundaries-and-auth-selection)
+- [Devin CLI MCP configuration](https://docs.devin.ai/cli/extensibility/mcp/configuration)
+- [Antigravity MCP docs](https://antigravity.google/docs/mcp/)
+- [OpenCode MCP servers](https://opencode.ai/docs/mcp-servers/)
+- [OpenClaw MCP tools](https://docs.openclaw.ai/tools/mcp)
+- [Cursor MCP docs](https://cursor.com/docs/mcp)
 - Upstream `composio-cli` skill for the full command cheat-sheet.

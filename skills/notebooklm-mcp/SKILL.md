@@ -68,14 +68,35 @@ nlm doctor -v          # verbose
 
 # Authentication
 
-NotebookLM auth = Google browser cookies. There is no API key. Two methods work on headless servers:
+NotebookLM auth = Google browser cookies. There is no API key. Three methods work on headless servers:
 
 | Method | Command | Requires | Best for |
 |--------|---------|----------|----------|
+| **OpenClaw CDP** (preferred) | `nlm login --provider openclaw --cdp-url http://127.0.0.1:18800` | An OpenClaw-managed browser exposing CDP on port 18800 | Servers running OpenClaw — no second browser needed |
 | **Manual file** | `nlm login --manual --file cookies.txt` | A `cookies.txt` file with raw Google cookies | One-time setup, no browser on the server, troubleshooting |
-| **OpenClaw CDP** | `nlm login --provider openclaw --cdp-url http://127.0.0.1:18800` | An OpenClaw-managed browser exposing CDP on the given URL | Servers that already run an OpenClaw browser session |
+| **Desktop auto + copy** | `nlm login` on desktop → copy `auth.json` | A desktop with Chrome | When neither OpenClaw nor manual cookies are available |
 
-> **Fallback order on headless boxes:** try OpenClaw CDP first (if a managed browser is running) → fall back to manual cookie file → fall back to running `nlm login` on a desktop with a browser and copying the resulting `auth.json`.
+> **Fallback order on headless boxes:** try OpenClaw CDP first (if a managed browser is running on port 18800) → fall back to manual cookie file → fall back to running `nlm login` on a desktop with a browser and copying the resulting `auth.json`.
+
+### OpenClaw CDP (preferred for OpenClaw users)
+
+OpenClaw runs a managed browser with Chrome DevTools Protocol (CDP) on port **18800** by default. `nlm` can read cookies from this browser session without launching a second browser:
+
+```bash
+nlm login --provider openclaw --cdp-url http://127.0.0.1:18800
+```
+
+If you configured a custom OpenClaw browser profile with a different CDP port:
+
+```bash
+# Check your OpenClaw browser config
+openclaw config get browser.profiles
+
+# Use the matching CDP port
+nlm login --provider openclaw --cdp-url http://127.0.0.1:<port>
+```
+
+The OpenClaw browser must already be logged in to Google / NotebookLM. Uses `suppress_origin=True` for websocket CDP commands to support managed endpoints that reject the default Origin header.
 
 ## Method 1 — Manual cookie file
 
@@ -251,12 +272,12 @@ nlm doctor auth-replay     # diagnose cookie replay vs browser-bound auth failur
 
 ## B.1 Configure
 
-The easiest way is `nlm setup`:
+The easiest way is `nlm setup` (covers Claude Code, Claude Desktop, Cursor, Gemini CLI, GitHub Copilot, Windsurf):
 
 ```bash
 nlm setup add claude-code       # Claude Code
 nlm setup add claude-desktop    # Claude Desktop
-nlm setup add gemini            # Gemini CLI
+nlm setup add gemini            # Gemini CLI / Antigravity IDE
 nlm setup add github-copilot    # GitHub Copilot
 nlm setup add cursor            # Cursor
 nlm setup add windsurf          # Windsurf
@@ -265,21 +286,45 @@ nlm setup add json              # Any other tool (interactive JSON generator)
 nlm setup list                  # show supported tools + their MCP config status
 ```
 
-### Manual config (per platform)
+For platforms not covered by `nlm setup` (Devin CLI/Desktop, OpenCode, Antigravity CLI, OpenClaw), use the bundled setup script or edit the config manually.
 
-The server binary is `notebooklm-mcp` (stdio by default). Recommended server name: `gemini-notebook-mcp` (avoids clashing with legacy Gemini Notebook servers).
+### Per-platform config — critical gotchas
 
-| Platform | File | Server name |
-|----------|------|-------------|
-| Claude Code | `~/.claude.json` → `mcpServers` | `notebooklm-mcp` |
-| Claude Desktop | `claude_desktop_config.json` | `notebooklm-mcp` |
-| Cursor | `~/.cursor/mcp.json` | `notebooklm-mcp` |
-| VS Code / Copilot | `.vscode/mcp.json` | `notebooklm-mcp` |
-| OpenCode | `~/.opencode/config.json` | `notebooklm-mcp` |
-| Devin CLI | `~/.config/devin/mcp-servers.json` | `notebooklm-mcp` |
-| Gemini CLI | `~/.gemini/settings.json` | `notebooklm-mcp` |
+Each MCP client platform has its own config format. Getting field names wrong causes the server to be **silently ignored** (no error, just no tools). See **`references/platform-quirks.md`** for the full matrix.
 
-See **`references/mcp-config.md`** for the exact JSON blocks.
+| Platform | Config file | Root key | Stdio command | Gotcha |
+|----------|-------------|----------|---------------|--------|
+| Claude Code | `~/.claude.json` | `mcpServers` | `command` + `args` | `type: "stdio"` |
+| Claude Desktop | `claude_desktop_config.json` | `mcpServers` | `command` + `args` | — |
+| Cursor | `~/.cursor/mcp.json` | `mcpServers` | `command` + `args` | `type: "stdio"` required |
+| Devin CLI | `~/.config/devin/mcp_config.json` | `mcpServers` | `command` + `args` | `devin mcp add` CLI |
+| Devin Desktop | `~/.devin/mcp_config.json` | `mcpServers` | `command` + `args` | — |
+| OpenCode | `~/.config/opencode/opencode.json` | **`mcp`** | **`command` (single array)** | `type: "local"`, `environment` not `env` |
+| Antigravity IDE/CLI | `~/.gemini/config/mcp_config.json` | `mcpServers` | `command` + `args` | Clear cache on uninstall |
+| OpenClaw | OpenClaw config | **`mcp.servers`** | `command` + `args` | `openclaw mcp add` CLI |
+
+> **Top 3 silent-failure traps:**
+> 1. **OpenCode** uses `mcp` (not `mcpServers`), `environment` (not `env`), `command` as single array (binary + args merged).
+> 2. **OpenClaw** uses `mcp.servers` (dotted) with `transport: "stdio"`, managed via `openclaw mcp add/set`.
+> 3. **Antigravity** caches MCP servers in `~/.gemini/antigravity{,-ide,-cli}/mcp/` — must delete cache dir to uninstall.
+
+See **`references/mcp-config.md`** for the exact JSON block per platform.
+
+### Automated setup helper
+
+Run the bundled helper to detect **all** installed platforms and patch each with the correct format:
+
+```bash
+bash skills/notebooklm-mcp/scripts/setup_notebooklm_mcp.sh
+# dry-run:
+bash skills/notebooklm-mcp/scripts/setup_notebooklm_mcp.sh --dry-run
+# target one platform:
+bash skills/notebooklm-mcp/scripts/setup_notebooklm_mcp.sh --platform cursor
+# use bare notebooklm-mcp binary instead of nlm wrapper:
+bash skills/notebooklm-mcp/scripts/setup_notebooklm_mcp.sh --binary notebooklm-mcp
+# remove:
+bash skills/notebooklm-mcp/scripts/setup_notebooklm_mcp.sh --remove
+```
 
 ### Transport options
 
@@ -366,11 +411,19 @@ If MCP tool calls fail with auth errors, call `refresh_auth` first. If that fail
 
 # References
 
-- **`references/mcp-config.md`** — Full per-platform JSON config blocks.
+- **`references/mcp-config.md`** — Full per-platform JSON config blocks (Claude Code/Desktop, Cursor, Devin CLI/Desktop, OpenCode, Antigravity IDE/CLI, OpenClaw).
+- **`references/platform-quirks.md`** — Cross-platform MCP config quirks matrix (serverUrl vs url, mcp vs mcpServers, environment vs env, env substitution syntax, OpenClaw CDP ports).
 - **`references/auth-guide.md`** — Deep dive on cookie extraction, file format, multi-profile, OpenClaw CDP, and auth lifecycle.
+- **`scripts/setup_notebooklm_mcp.sh`** — Detects all installed platforms and patches each with the correct format (handles mcp/mcpServers, command array, environment/env, OpenClaw CLI).
 - **`scripts/verify_notebooklm.sh`** — Runs `nlm doctor` + `nlm login --check` + lists notebooks to confirm end-to-end.
 - **`scripts/extract_cookies_help.sh`** — Prints the step-by-step cookie extraction instructions for the user.
 - [Authentication guide (upstream)](https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/AUTHENTICATION.md)
 - [MCP guide (upstream)](https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/MCP_GUIDE.md)
 - [CLI guide (upstream)](https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/CLI_GUIDE.md)
 - [PyPI](https://pypi.org/project/notebooklm-mcp-cli/)
+- [Devin CLI MCP configuration](https://docs.devin.ai/cli/extensibility/mcp/configuration)
+- [Antigravity MCP docs](https://antigravity.google/docs/mcp/)
+- [OpenCode MCP servers](https://opencode.ai/docs/mcp-servers/)
+- [OpenClaw MCP tools](https://docs.openclaw.ai/tools/mcp)
+- [OpenClaw browser CDP](https://docs.openclaw.ai/browser)
+- [Cursor MCP docs](https://cursor.com/docs/mcp)
