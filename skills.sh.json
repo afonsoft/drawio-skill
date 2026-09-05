@@ -37,10 +37,11 @@
     },
     {
       "title": "MCP Integrations",
-      "description": "Skills for configuring, authenticating, and using external MCP servers (Composio, NotebookLM).",
+      "description": "Skills for configuring, authenticating, and using external MCP servers (Composio, NotebookLM, WordPress).",
       "skills": [
         "composio-mcp",
-        "notebooklm-mcp"
+        "notebooklm-mcp",
+        "wordpress-mcp"
       ]
     }
   ]
