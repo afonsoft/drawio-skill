@@ -1,6 +1,6 @@
 # Performance Review Checklist
 
-Use this checklist alongside the `performance-optimization` skill when reviewing a change for performance regressions. Confirm each item before a performance-sensitive change merges.
+Use this checklist alongside the `code-review-and-quality` skill when reviewing a change for performance regressions. Confirm each item before a performance-sensitive change merges.
 
 ## Queries & Data Access
 - [ ] No N+1 query patterns (batch or join instead of per-row lookups)

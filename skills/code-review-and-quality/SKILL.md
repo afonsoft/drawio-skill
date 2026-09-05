@@ -1,6 +1,6 @@
 ---
 name: code-review-and-quality
-license: UNLICENSED
+license: MIT
 description: Use when reviewing code before it merges — your own, another agent's, or a human's. Assesses quality across five axes (correctness, readability, architecture, security, performance) before a change enters the main branch. Do NOT use for writing code, or as a substitute for automated tests/CI; this is a review gate, not an implementation guide.
 metadata:
   version: "1.0.0"
@@ -69,7 +69,7 @@ Does the change fit the system's design?
 
 ### 4. Security
 
-For detailed security guidance, see `security-and-hardening`. Does the change introduce vulnerabilities?
+For detailed security guidance, see `references/security-checklist.md`. Does the change introduce vulnerabilities?
 
 - Is user input validated and sanitized?
 - Are secrets kept out of code, logs, and version control?
@@ -82,7 +82,7 @@ For detailed security guidance, see `security-and-hardening`. Does the change in
 
 ### 5. Performance
 
-For detailed profiling and optimization, see `performance-optimization`. Does the change introduce performance problems?
+For detailed profiling and optimization, see `references/performance-checklist.md`. Does the change introduce performance problems?
 
 - Any N+1 query patterns?
 - Any unbounded loops or unconstrained data fetching?
@@ -303,7 +303,7 @@ Part of code review is dependency review:
 4. **Mind the transitive graph.** Most installed packages are ones nobody chose directly. Review the lockfile diff, not just `package.json`; a single direct bump can pull in dozens of indirect changes.
 5. **Keep the lockfile honest.** Commit it, review its diff, and never hand-edit it. The lockfile is the thing that actually pins what ships.
 
-For triaging `npm audit` findings and supply-chain risk (typosquatting, compromised maintainers), follow the `security-and-hardening` skill — this section covers the upgrade *workflow*, that one covers the security verdict.
+For triaging `npm audit` findings and supply-chain risk (typosquatting, compromised maintainers), follow `references/security-checklist.md` — this section covers the upgrade *workflow*, that checklist covers the security verdict.
 
 ## The Review Checklist
 
@@ -354,8 +354,8 @@ For triaging `npm audit` findings and supply-chain risk (typosquatting, compromi
 ```
 ## See Also
 
-- For detailed security review guidance, see `../../references/security-checklist.md`
-- For performance review checks, see `../../references/performance-checklist.md`
+- For detailed security review guidance, see `references/security-checklist.md`
+- For performance review checks, see `references/performance-checklist.md`
 
 ## Common Rationalizations
 

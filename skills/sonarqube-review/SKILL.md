@@ -1,7 +1,7 @@
 ---
 name: sonarqube-review
-license: UNLICENSED
-description: Use when fixing SonarQube code quality issues automatically across any language or framework
+license: MIT
+description: Use when fixing SonarQube code quality issues automatically across any language or framework — issue analysis, fix generation, unit tests, and coverage. Supports Community, Enterprise, and custom SonarQube deployments via environment variables. Do NOT use for general code review without SonarQube (use code-review-and-quality), for whole-repo quality interventions without SonarQube (use quality-test-implementation), or for non-SonarQube static analysis tools.
 metadata:
   version: "1.0.0"
   visibility: public
@@ -628,7 +628,7 @@ Local validation saves time and avoids pipeline rejections. Use the `sonar-local
 ## Adaptations for this catalog
 
 This skill follows the agent catalog standards:
-- **Frontmatter** aligned to repo standard: `license: UNLICENSED`, `metadata.version`, `metadata.author`, tripartite `description` with explicit `Do NOT use for` clause
+- **Frontmatter** aligned to repo standard: `license: MIT`, `metadata.version`, `metadata.author`, tripartite `description` with explicit `Do NOT use for` clause
 - **Language:** English (en-us) for content, technical terms in English
 - **Branch policy:** follow `feature/{agent}-{YYYYMMDD}-{short-description}`
 - **Git workflow:** branches created from `develop`, PR target is `develop` (not `main`)

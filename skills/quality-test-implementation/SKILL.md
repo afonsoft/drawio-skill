@@ -1,6 +1,6 @@
 ---
 name: quality-test-implementation
-license: UNLICENSED
+license: MIT
 description: Use when improving code quality, reducing technical debt, or raising test coverage in .NET, Java, or Python repositories — fixing static-analysis warnings (Roslyn/Sonar, SpotBugs/Checkstyle, Bandit/Ruff), resolving security CVEs, and applying SOLID/DDD/Clean Architecture. Do NOT use for a single-file cosmetic edit, a focused review of one change, or as a substitute for `code-review-and-quality`; this is a whole-repo quality intervention, not a localized fix.
 metadata:
   version: "1.0.0"
@@ -226,4 +226,4 @@ Use **Conventional Commits**:
 
 ## Origin
 
-Adapted from the `devin/playbooks/multi-language-quality/PLAYBOOK.md` playbook into an agentskills.io-format skill, following the catalog standards (`license: UNLICENSED`, `metadata.version`, tripartite `description` with explicit `Do NOT use for` clause).
+Adapted from the `devin/playbooks/multi-language-quality/PLAYBOOK.md` playbook into an agentskills.io-format skill, following the catalog standards (`license: MIT`, `metadata.version`, tripartite `description` with explicit `Do NOT use for` clause).

@@ -1,6 +1,6 @@
 ---
 name: building-mcp-servers
-license: UNLICENSED
+license: MIT
 description: Use when building MCP (Model Context Protocol) servers that let LLMs call external APIs or services, in TypeScript (MCP SDK), Python (FastMCP), or C# (ModelContextProtocol.AspNetCore). Covers tool design, transports (Streamable HTTP/stdio), OAuth 2.1 auth, and evaluations. Do NOT use for consuming or configuring an existing MCP server, or for non-MCP API integrations.
 metadata:
   version: "1.1.0"

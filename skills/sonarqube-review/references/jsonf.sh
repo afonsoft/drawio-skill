@@ -9,8 +9,7 @@ jsonf(){
   i=0
   s=false
   e=false
-  n=false
-  
+
   while IFS= read -r -n1 c; do
     if $s; then
       if $e; then
@@ -32,23 +31,19 @@ jsonf(){
           echo
           ((i+=4))
           printf '%*s' $i ''
-          n=false
           ;;
         "}"|"]")
           echo
           ((i-=4))
           printf '%*s' $i ''
           printf '%s' "$c"
-          n=false
           ;;
         ",")
           printf '%s\n' "$c"
           printf '%*s' $i ''
-          n=false
           ;;
         ":")
           printf '%s' ": "
-          n=false
           ;;
         '"')
           printf '%s' "$c"

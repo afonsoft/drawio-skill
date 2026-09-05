@@ -1,6 +1,6 @@
 # Security Review Checklist
 
-Use this checklist alongside the `security-and-hardening` skill when reviewing a change for security regressions. Every item below must be answered before a security-sensitive change merges.
+Use this checklist alongside the `code-review-and-quality` skill when reviewing a change for security regressions. Every item below must be answered before a security-sensitive change merges.
 
 ## Input & Boundaries
 - [ ] All external input (HTTP params, headers, body, file uploads, CLI args, env, config files) is validated and sanitized at the system boundary

@@ -1,7 +1,7 @@
 ---
 name: observability-and-instrumentation
-license: UNLICENSED
-description: Use when adding logging, metrics, tracing, or alerting to code that runs in production, or when a production incident couldn't be diagnosed from available data. Makes system behavior visible and diagnosable. Do NOT use for live debugging of an ongoing failure (use debugging-and-error-recovery), profiling/optimization (use performance-optimization), or launch-day monitoring checklists (use shipping-and-launch).
+license: MIT
+description: Use when adding logging, metrics, tracing, or alerting to code that runs in production, or when a production incident couldn't be diagnosed from available data. Makes system behavior visible and diagnosable. Do NOT use for live debugging of an ongoing failure (use a debugging skill), profiling/optimization (use a performance skill), or launch-day monitoring checklists (use a shipping skill).
 metadata:
   version: "1.0.0"
   visibility: public
@@ -24,9 +24,9 @@ Code you can't observe is code you can't operate. Observability is the ability t
 - Reviewing a PR that adds I/O, retries, queues, or cross-service calls
 
 **NOT for:**
-- Diagnosing a failure happening right now — use the `debugging-and-error-recovery` skill (observability is what makes that skill fast next time)
-- Profiling and optimizing measured slowness — use the `performance-optimization` skill
-- Launch-day monitoring checklists and rollback triggers — see the `shipping-and-launch` skill; this skill covers the instrumentation that feeds them
+- Diagnosing a failure happening right now — use a debugging skill (observability is what makes debugging fast next time)
+- Profiling and optimizing measured slowness — use a performance optimization skill
+- Launch-day monitoring checklists and rollback triggers — use a shipping/launch skill; this skill covers the instrumentation that feeds them
 
 ## Process
 
@@ -94,7 +94,7 @@ app.use((req, res, next) => {
 });
 ```
 
-**Never log secrets, tokens, passwords, or full PII.** This is a hard rule from the `security-and-hardening` skill — telemetry pipelines are a classic data-leak path. Allowlist fields; don't log whole request bodies.
+**Never log secrets, tokens, passwords, or full PII.** Telemetry pipelines are a classic data-leak path. Allowlist fields; don't log whole request bodies. See `../code-review-and-quality/references/security-checklist.md` for the full security checklist.
 
 ### 4. Metrics
 
@@ -206,4 +206,4 @@ After instrumenting a feature, confirm:
 - [ ] Every new alert is symptom-based, has a runbook link, and was test-fired once
 - [ ] An induced failure in staging was located via telemetry alone, without reading the source
 
-For the at-a-glance version of this list, including the pre-launch instrumentation gate, see `../../references/observability-checklist.md`.
+For the at-a-glance version of this list, including the pre-launch instrumentation gate, see `references/observability-checklist.md`.

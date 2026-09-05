@@ -1,7 +1,7 @@
 ---
 name: create-agent-harness
-license: UNLICENSED
-description: Bootstrap a complete production-ready agent harness in a repository — CLAUDE.md, .claude/, .devin/, skills/, rules/, ignore files, and sub-agents. Use when initializing AI agent support in a new repo, restructuring existing agent files into modern File-based Context conventions, or generating harness artifacts following Agent = Model + Harness principles. Targets Claude Code and Devin CLI only — does NOT create artifacts for OpenCode, Cursor, Gemini, Copilot or JetBrains AI. Do NOT use for building MCP servers (use building-mcp-servers).
+license: MIT
+description: Bootstrap a complete production-ready agent harness in a repository — AGENTS.md/CLAUDE.md, .claude/, .devin/, .opencode/, .cursor/, .gemini/, skills/, rules/, ignore files, and sub-agents. Use when initializing AI agent support in a new repo, restructuring existing agent files into modern File-based Context conventions, or generating harness artifacts following Agent = Model + Harness principles. Supports Claude Code, Devin CLI/Desktop, OpenCode, Cursor, Gemini CLI, Antigravity IDE/CLI, and OpenClaw. Do NOT use for building MCP servers (use building-mcp-servers).
 metadata:
   version: "1.1.0"
   visibility: public
@@ -13,9 +13,20 @@ metadata:
 
 # Create Agent Harness
 
-Generate a production-ready harness for AI agents (**Claude Code** and **Devin CLI** only) in a target repository. The harness is everything the model can't do alone.
+Generate a production-ready harness for AI agents in a target repository. The harness is everything the model can't do alone. Supports all major agent platforms:
 
-> Scope of this skill: **only** Claude Code and Devin CLI. Do not generate artifacts for OpenCode, Cursor, Gemini CLI, GitHub Copilot, or JetBrains AI — those agents are out of scope.
+| Platform | Config file | Skills dir | Hooks dir |
+|----------|-------------|------------|-----------|
+| Claude Code | `CLAUDE.md` | `.claude/skills/` | `.claude/hooks/` |
+| Devin CLI | `AGENTS.md` | `.devin/skills/` | `.devin/hooks/` |
+| Devin Desktop | `AGENTS.md` | `.devin/skills/` | `.devin/hooks/` |
+| OpenCode | `AGENTS.md` | `.opencode/skills/` | `.opencode/hooks/` |
+| Cursor | `AGENTS.md` | `.cursor/skills/` | `.cursor/hooks/` |
+| Gemini CLI | `AGENTS.md` | `.gemini/skills/` | `.gemini/hooks/` |
+| Antigravity IDE | `AGENTS.md` | `.gemini/skills/` | `.gemini/hooks/` |
+| Antigravity CLI (agy) | `AGENTS.md` | `.gemini/antigravity-cli/skills/` | `.gemini/antigravity-cli/hooks/` |
+
+> **Strategy:** Generate `CLAUDE.md` as the Single Source of Truth, then create `AGENTS.md` as a thin symlink/reference for non-Claude platforms. All platforms read `AGENTS.md` natively except Claude Code which reads `CLAUDE.md`. This avoids duplication while ensuring every platform gets the same instructions.
 
 ## Core Principle
 
@@ -84,10 +95,15 @@ Generate only what is missing or needs restructuring. Adapt structure to discove
 [Languages, frameworks, versions]
 
 ## Paths per Platform
-| Platform | Skills | Rules | Knowledge |
-|---|---|---|---|
-| Claude Code | `.claude/skills/` | `.claude/rules/` | `.claude/knowledge/` |
-| Devin CLI | `.claude/skills/` | `.claude/rules/` | `.claude/knowledge/` |
+| Platform | Config | Skills | Rules | Knowledge |
+|---|---|---|---|---|
+| Claude Code | `CLAUDE.md` | `.claude/skills/` | `.claude/rules/` | `.claude/knowledge/` |
+| Devin CLI/Desktop | `AGENTS.md` | `.devin/skills/` | `.devin/rules/` | `.devin/knowledge/` |
+| OpenCode | `AGENTS.md` | `.opencode/skills/` | `.opencode/rules/` | `.opencode/memory/` |
+| Cursor | `AGENTS.md` | `.cursor/skills/` | `.cursor/rules/` | `.cursor/knowledge/` |
+| Gemini CLI | `AGENTS.md` | `.gemini/skills/` | `.gemini/rules/` | `.gemini/knowledge/` |
+| Antigravity IDE | `AGENTS.md` | `.gemini/skills/` | `.gemini/rules/` | `.gemini/knowledge/` |
+| Antigravity CLI (agy) | `AGENTS.md` | `.gemini/antigravity-cli/skills/` | `.gemini/antigravity-cli/rules/` | `.gemini/antigravity-cli/knowledge/` |
 
 ## Code Standards
 - DO / DON'T / Principles (discovered from repo)
@@ -117,14 +133,28 @@ Generate only what is missing or needs restructuring. Adapt structure to discove
 
 ### B. Platform Files (root)
 
-| File | Platform | Content |
+| File | Platforms | Content |
 |---|---|---|
-| `CLAUDE.md` | Claude Code + Devin CLI | Single Source of Truth (base instructions) |
+| `CLAUDE.md` | Claude Code | Single Source of Truth (base instructions) |
+| `AGENTS.md` | Devin CLI/Desktop, OpenCode, Cursor, Gemini CLI, Antigravity IDE/CLI | Thin reference to `CLAUDE.md` content (or symlink) |
 
-**Rule:** `CLAUDE.md` is the main file — both Claude Code and Devin CLI read it natively.
+**Rule:** `CLAUDE.md` is the main file for Claude Code. `AGENTS.md` is the main file for all other platforms. To avoid duplication, write the full content in `CLAUDE.md` and create `AGENTS.md` as either:
+1. A symlink: `ln -s CLAUDE.md AGENTS.md` (preferred on Linux/macOS)
+2. A thin reference file that includes the same content
 
-> ⚠️ **DO NOT create `AGENTS.md` separately** — Devin CLI reads `CLAUDE.md` natively. Creating a separate file is unnecessary duplication.
-> ⚠️ **DO NOT create platform files for OpenCode, Cursor (`.cursorrules`), Gemini (`GEMINI.md`), Copilot (`copilot-instructions.md`) or JetBrains** — these platforms are outside the scope of this skill.
+**`AGENTS.md` template (thin reference):**
+
+```markdown
+# AGENTS.md
+
+<!-- This file mirrors CLAUDE.md for non-Claude platforms (Devin, OpenCode, Cursor, Gemini, Antigravity). -->
+<!-- If symlinked to CLAUDE.md, this content is identical. If maintained separately, keep in sync. -->
+
+[Same content as CLAUDE.md — mission, tech stack, paths, rules, agent loop, etc.]
+```
+
+> ⚠️ **Keep `CLAUDE.md` and `AGENTS.md` in sync.** If symlinked, changes propagate automatically. If separate files, update both.
+> ⚠️ **Do NOT create** `.cursorrules` (legacy, replaced by `AGENTS.md`), `GEMINI.md` (replaced by `AGENTS.md`), `copilot-instructions.md` (replaced by `AGENTS.md`), or `.geminiignore`/`.cursorignore`/`.aiignore` — these are legacy formats superseded by the Agent Skills specification.
 
 ### C. `.claude/CONTEXT.md` — Context Engineering
 
@@ -221,16 +251,19 @@ If repo uses GitHub Actions, consider **gh-aw** (Agentic Workflows) with safe-ou
 
 ### H. Ignore Files
 
-> ❗ **`.claudeignore` and `.devinignore` are NOT read by CLIs.** Claude Code and Devin CLI exclude files via **`permissions.deny`** (default `Read(...)` patterns) and respect `.gitignore` for discovery. Do not generate dedicated ignore files.
+> ❗ **`.claudeignore`, `.devinignore`, `.cursorignore`, `.geminiignore`, `.opencodeignore`, `.aiignore` are NOT read by most CLIs.** Exclude files via **`permissions.deny`** (where supported) and rely on `.gitignore` for discovery. Do not generate dedicated ignore files.
 
 **Correct mechanism by platform:**
 
 | Platform | Where | How |
 |---|---|---|
-| **Claude Code** | `.claude/settings.json` | `permissions.deny` with `Read(...)` patterns (deprecated `ignorePatterns`) |
+| **Claude Code** | `.claude/settings.json` | `permissions.deny` with `Read(...)` patterns |
 | **Devin CLI** | `.devin/config.json` | `permissions.deny` (`Read(...)`/`Exec(...)`) |
+| **OpenCode** | `.opencode/config.json` | `permissions.deny` (if supported) or `.gitignore` |
+| **Cursor** | `.cursor/settings.json` | `permissions.deny` (if supported) or `.gitignore` |
+| **Gemini CLI / Antigravity** | `.gemini/settings.json` | `.gitignore` (no native deny support) |
 
-> Files matching `deny` patterns are excluded from discovery, search, and reading. `.gitignore` is respected for file discovery.
+> Files matching `deny` patterns are excluded from discovery, search, and reading. `.gitignore` is respected for file discovery on all platforms.
 
 **Base content** (adapt to discovered stack):
 
@@ -422,6 +455,20 @@ model: inherit
 
 > ⚠️ **`read_config_from: { claude: true }` is REQUIRED** — without it, Devin CLI will not import Claude Code's rules, skills, and subagents.
 
+### O. Platform-specific directories (for non-Claude targets)
+
+Generate these only for platforms the repo targets. Each mirrors `.claude/` structure:
+
+| Platform | Directory | Key files |
+|---|---|---|
+| OpenCode | `.opencode/` | `skills/`, `hooks/`, `config.json` (MCP under `mcp` key, not `mcpServers`) |
+| Cursor | `.cursor/` | `skills/`, `hooks/`, `mcp.json` (MCP under `mcpServers` key) |
+| Gemini CLI | `.gemini/` | `skills/`, `hooks/`, `settings.json`, `config/mcp_config.json` |
+| Antigravity IDE | `.gemini/` | Same as Gemini CLI (shared directory) |
+| Antigravity CLI (agy) | `.gemini/antigravity-cli/` | `skills/`, `hooks/` (separate from IDE) |
+
+> **MCP config gotchas per platform** — see `composio-mcp` or `notebooklm-mcp` skills for the full platform-quirks matrix (e.g. Devin Desktop uses `serverUrl` not `url`, OpenCode uses `environment` not `env`).
+
 ## Step 3 — Agent Loop
 
 Define in CLAUDE.md. Choose pattern adapted to the repo:
@@ -460,20 +507,21 @@ Define in CLAUDE.md. Choose pattern adapted to the repo:
 | Stateless sessions | MEMORY.md with checkpoints |
 | Verbose feedback | Filter to summary lines |
 | Duplicated info across files | Reference, don't copy |
-| `AGENTS.md` created | Remove — Devin reads CLAUDE.md natively |
-| `GEMINI.md` / `.cursorrules` / `.geminiignore` / `.cursorignore` / `.aiignore` / `.opencodeignore` created | Remove — out of scope (OpenCode, Cursor, Gemini, JetBrains are not supported here) |
+| `AGENTS.md` created separately from `CLAUDE.md` with duplicated content | Symlink `AGENTS.md` → `CLAUDE.md`, or maintain a thin reference to avoid duplication |
+| `GEMINI.md` / `.cursorrules` / `copilot-instructions.md` created | Remove — these are legacy formats superseded by `AGENTS.md` (Agent Skills specification) |
+| `.geminiignore` / `.cursorignore` / `.aiignore` / `.opencodeignore` created | Remove — not read by most CLIs; use `permissions.deny` or `.gitignore` instead |
 
 ### Quality Checklist
 
 - [ ] `CLAUDE.md` ≤ 500 lines, no generic content
-- [ ] Platform files reference CLAUDE.md — no duplication
+- [ ] `AGENTS.md` created (symlink or thin reference to `CLAUDE.md`) for non-Claude platforms
 - [ ] `permissions.deny` covers secrets and `/.github/workflows` (`.claude/settings.json` + `.devin/config.json`)
-- [ ] Hook de branch protection (main/master/develop) configured nas duas plataformas
+- [ ] Hook de branch protection (main/master/develop) configured
 - [ ] Skills with tripartite description (What / Use when / Do NOT use)
 - [ ] Rules in `.claude/rules/` with `paths:` for activation (NOT `applyTo`)
 - [ ] Knowledge files are self-contained
 - [ ] Verification loop documented and executable
-- [ ] Interoperable across relevant platforms
+- [ ] Interoperable across all target platforms (Claude Code, Devin, OpenCode, Cursor, Gemini, Antigravity)
 - [ ] All artifacts consistent with each other
 - [ ] No invented context — everything backed by repo evidence
 
@@ -485,7 +533,8 @@ When complete, list all generated artifacts grouped by location:
 ## Generated Artifacts
 
 ### Root
-- [ ] CLAUDE.md (SSoT, ≤500 lines) — read natively by Claude Code and Devin CLI
+- [ ] CLAUDE.md (SSoT, ≤500 lines) — read natively by Claude Code
+- [ ] AGENTS.md (symlink to CLAUDE.md or thin reference) — read by Devin, OpenCode, Cursor, Gemini, Antigravity
 - [ ] .claude/settings.json (permissions, hooks)
 - [ ] .devin/config.json (read_config_from: { claude: true })
 
@@ -510,6 +559,12 @@ When complete, list all generated artifacts grouped by location:
 ### .devin/
 - [ ] config.json (read_config_from: { claude: true })
 - [ ] hooks/block-protected-push.sh (optional, for branch protection)
+
+### Platform-specific (generate only for target platforms)
+- [ ] .opencode/ (skills, hooks, config — for OpenCode)
+- [ ] .cursor/ (skills, hooks, config — for Cursor)
+- [ ] .gemini/ (skills, hooks, config — for Gemini CLI / Antigravity IDE)
+- [ ] .gemini/antigravity-cli/ (skills, hooks — for Antigravity CLI / agy)
 ```
 
 ## Additional Requirements

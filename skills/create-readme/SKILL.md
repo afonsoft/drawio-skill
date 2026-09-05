@@ -1,6 +1,6 @@
 ---
 name: create-readme
-license: UNLICENSED
+license: MIT
 description: Use when generating or updating professional README.md and CHANGELOG.md files for a project. Covers repository analysis, stack detection, and alignment with Keep a Changelog and SemVer standards. Do NOT use for API-reference docs (use dedicated doc tooling) or for licenses/governance documents.
 metadata:
   version: "1.0.0"
