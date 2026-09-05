@@ -72,13 +72,29 @@ jobs:
   validate-spec-action:
     name: Validate Spec (validate-skill)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        skill:
+          - building-mcp-servers
+          - code-review-and-quality
+          - composio-mcp
+          - create-agent-harness
+          - create-readme
+          - drawio-architecture
+          - notebooklm-mcp
+          - observability-and-instrumentation
+          - obsidian
+          - quality-test-implementation
+          - sonarqube-review
+          - wordpress-mcp
     steps:
       - uses: actions/checkout@v5
 
-      - name: Validate each skill
+      - name: Validate ${{ matrix.skill }}
         uses: Flash-Brew-Digital/validate-skill@v1
         with:
-          path: ./skills
+          path: ./skills/${{ matrix.skill }}
           validate-references: true
           fail-on-warning: false
 
