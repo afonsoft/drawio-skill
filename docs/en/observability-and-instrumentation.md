@@ -15,5 +15,5 @@ The skill moves from "logging everything" to "answering specific questions":
 Use this skill whenever you are implementing a new feature that will run in production, especially if it involves I/O, external APIs, or background jobs.
 
 ## 🔗 Correlation
-- **Debugging**: This is the "preventative" side of the `debugging-and-error-recovery` skill. Good observability makes debugging trivial.
+- **Debugging**: This is the "preventative" side of debugging. Good observability makes debugging trivial.
 - **Quality**: High-quality code (from `code-review-and-quality`) must include instrumentation as part of its "Correctness" axis.

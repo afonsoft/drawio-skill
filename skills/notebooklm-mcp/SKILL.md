@@ -4,9 +4,11 @@ description: Use when the user wants to use Google NotebookLM (Gemini Notebook) 
 license: MIT
 compatibility: Needs Python 3.10+ and `notebooklm-mcp-cli` (`uv tool install notebooklm-mcp-cli` or `pipx install notebooklm-mcp-cli`), providing the `nlm` and `notebooklm-mcp` binaries. Auto auth mode needs a Chromium-family browser (Chrome/Chromium/Brave/Edge/Arc) or Firefox installed. Headless servers use manual cookie file mode or an external CDP provider (OpenClaw). Works on macOS/Linux/Windows.
 metadata:
-  homepage: https://github.com/jacob-bd/notebooklm-mcp-cli
-  author: afonsoft
   version: "1.0.0"
+  visibility: public
+  author: afonsoft
+  url: https://github.com/afonsoft/skills
+  homepage: https://github.com/jacob-bd/notebooklm-mcp-cli
   sources: https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/AUTHENTICATION.md, https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/MCP_GUIDE.md, https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/CLI_GUIDE.md, https://pypi.org/project/notebooklm-mcp-cli/
 ---
 

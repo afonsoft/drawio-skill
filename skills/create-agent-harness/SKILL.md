@@ -247,7 +247,7 @@ Document discovered or recommended workflows:
 - Verification loop: `Agent Output → Lint → Tests → CI → LLM Judge → Human`
 - Rollback strategy
 
-If repo uses GitHub Actions, consider **gh-aw** (Agentic Workflows) with safe-outputs, sanitized context expressions, and bash narrowlist tool allow-listing. See `github-agentic-workflows` skill.
+If repo uses GitHub Actions, consider **gh-aw** (Agentic Workflows) with safe-outputs, sanitized context expressions, and bash narrowlist tool allow-listing. See [GitHub Agentic Workflows](https://github.com/github/gh-aw).
 
 ### H. Ignore Files
 
@@ -296,12 +296,13 @@ TestResults/  coverage/
 ---
 name: skill-name
 description: >
-author: afonsoft
-url: https://github.com/afonsoft/skills
   [What]. Use when [triggers, contexts].
   Do NOT use for [anti-patterns] (use alternative-skill).
+license: MIT
 metadata:
   version: "1.0.0"
+  author: afonsoft
+  url: https://github.com/afonsoft/skills
 ---
 
 ## Context
@@ -623,7 +624,7 @@ Execution Plan:
 | Need | Skill |
 |---|---|
 | Build an MCP server for the agent | `building-mcp-servers` |
-| GitHub Actions agentic workflows (gh-aw) | `github-agentic-workflows` |
+| GitHub Actions agentic workflows (gh-aw) | [gh-aw](https://github.com/github/gh-aw) (external) |
 | Full Devin operational playbook with confirmation gates | `devin/playbooks/create-agents` |
 
 ## References

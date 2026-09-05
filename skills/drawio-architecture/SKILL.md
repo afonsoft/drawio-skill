@@ -4,9 +4,11 @@ description: Use when generating architecture diagrams, system/service diagrams,
 license: MIT
 compatibility: MCP mode needs Node.js + `npx @drawio/mcp` (or a self-hosted draw.io instance via DRAWIO_BASE_URL). Local export mode needs the draw.io desktop CLI on PATH. Works on macOS/Linux/Windows.
 metadata:
-  homepage: https://github.com/jgraph/drawio-mcp
-  author: merged from Agents365-ai/drawio-skill, scarr05/claude-skills-pub, jgraph/drawio-mcp
   version: "1.0.0"
+  visibility: public
+  author: merged from Agents365-ai/drawio-skill, scarr05/claude-skills-pub, jgraph/drawio-mcp
+  url: https://github.com/afonsoft/skills
+  homepage: https://github.com/jgraph/drawio-mcp
   sources: https://github.com/Agents365-ai/drawio-skill, https://github.com/scarr05/claude-skills-pub, https://www.drawio.com/docs/manual/generate/drawio-mcp-server/, https://dev.to/rushier/how-to-use-claude-ai-drawio-to-create-architecture-diagrams-for-projects-17i1, https://github.com/jgraph/drawio-mcp
 ---
 

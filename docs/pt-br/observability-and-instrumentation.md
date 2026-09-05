@@ -15,5 +15,5 @@ A skill muda a abordagem de "logar tudo" para "responder perguntas específicas"
 Use esta skill sempre que estiver implementando uma nova funcionalidade que rodará em produção, especialmente se envolver I/O, APIs externas ou jobs em segundo plano.
 
 ## 🔗 Correlação
-- **Debugging**: Este é o lado "preventivo" da skill `debugging-and-error-recovery`. Uma boa observabilidade torna o debugging trivial.
+- **Debugging**: Este é o lado "preventivo" do debugging. Uma boa observabilidade torna o debugging trivial.
 - **Qualidade**: Código de alta qualidade (via `code-review-and-quality`) deve incluir a instrumentação como parte do seu eixo de "Corretude".

@@ -4,9 +4,11 @@ description: Use when the user wants to connect AI agents to external apps (Gmai
 license: MIT
 compatibility: CLI mode needs Node.js + `composio` on PATH (npm i -g composio-core @composio/cli or via `composio setup`). MCP fallback mode needs an HTTP-capable MCP client and a `ck_*` consumer key from the Composio dashboard. Works on macOS/Linux/Windows.
 metadata:
-  homepage: https://docs.composio.dev
-  author: afonsoft
   version: "1.0.0"
+  visibility: public
+  author: afonsoft
+  url: https://github.com/afonsoft/skills
+  homepage: https://docs.composio.dev
   sources: https://docs.composio.dev/docs/composio-connect, https://github.com/ComposioHQ/composio, https://docs.composio.dev/kb/guide/consumer-project-boundaries-and-auth-selection
 ---
 
