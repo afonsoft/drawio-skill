@@ -134,6 +134,41 @@ EOF
     sudo chown "$WEB_USER:$WEB_USER" "$MU_DIR/enable-app-passwords.php"
   fi
 
+  # Patch false-positive "Another version already loaded" notice
+  AUTOLOADER="$PLUGINS_DIR/mcp-adapter/includes/Autoloader.php"
+  if [ -f "$AUTOLOADER" ] && ! grep -q "ReflectionClass" "$AUTOLOADER" 2>/dev/null; then
+    echo "→ Patching Autoloader false-positive (is_loaded_elsewhere)..."
+    sudo cp "$AUTOLOADER" "$AUTOLOADER.bak"
+    sudo python3 - "$AUTOLOADER" <<'PY'
+import sys
+path = sys.argv[1]
+with open(path) as f:
+    content = f.read()
+old = "\t\tself::loaded_elsewhere_notice();\n\t\treturn true;\n\t}"
+new = """\t\t// Check if the class was loaded from our own plugin directory.
+\t\t// Without this check, the plugins_loaded recheck finds the class
+\t\t// that was loaded by our own autoloader (false positive).
+\t\t$ref = new \\ReflectionClass( Core\\McpAdapter::class );
+\t\t$expected_dir = plugin_dir_path( __DIR__ );
+\t\t$actual_file  = $ref->getFileName();
+\t\tif ( is_string( $actual_file ) && strpos( $actual_file, $expected_dir ) === 0 ) {
+\t\t\treturn false;
+\t\t}
+
+\t\tself::loaded_elsewhere_notice();
+\t\treturn true;
+\t}"""
+if old in content:
+    content = content.replace(old, new, 1)
+    with open(path, "w") as f:
+        f.write(content)
+    print("  patched")
+else:
+    print("  (pattern not found — may already be patched or code changed)")
+PY
+    sudo chown "$WEB_USER:$WEB_USER" "$AUTOLOADER"
+  fi
+
   # Activate
   echo "→ Activating plugin..."
   $WP plugin activate mcp-adapter || { echo "Error: activation failed" >&2; exit 4; }

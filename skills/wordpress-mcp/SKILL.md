@@ -417,6 +417,7 @@ npx -y @lobehub/market-cli skills install openclaw-skills-wordpress-mcp --dir ~/
 | MCP config silently ignored (no tools) | Wrong field name for platform | See `references/platform-quirks.md` (httpUrl vs url, mcp vs mcpServers) |
 | Gemini CLI MCP not loading | Used `url` instead of `httpUrl` | Gemini uses `httpUrl` for HTTP servers, not `url` |
 | Codex MCP not loading | Headers not in sub-table | Use `[mcp_servers.<name>.headers]` TOML sub-table |
+| Admin notice: "Another version of MCP Adapter is already loaded" | False positive in `Autoloader::is_loaded_elsewhere()` — recheck finds class loaded by our own plugin | Patch `includes/Autoloader.php` with `ReflectionClass` path check (see `references/troubleshooting.md`) |
 
 See **`references/troubleshooting.md`** for extended troubleshooting.
 

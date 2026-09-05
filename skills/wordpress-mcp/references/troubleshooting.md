@@ -75,6 +75,58 @@ curl -s -X POST "$URL" -H "Authorization: Basic $AUTH" \
 
 **Fix:** Some hosts (and local environments) disable Application Passwords. Use the mu-plugin from A.2 to force-enable.
 
+### Admin notice: "Another version of MCP Adapter is already loaded"
+
+**Cause:** Bug (false positive) in `Autoloader::is_loaded_elsewhere()`. The method rechecks `class_exists('WP\MCP\Core\McpAdapter')` on `plugins_loaded`, but by then our own plugin has already loaded the class via `McpAdapter::instance()`. The recheck finds the class and incorrectly concludes it was loaded by another plugin.
+
+This is **not** caused by another plugin bundling MCP Adapter — it's a self-detection bug. It affects any standalone install of mcp-adapter v0.6.1 (and likely earlier).
+
+**Fix:** Patch `includes/Autoloader.php` in the plugin to check if the class was loaded from our own directory:
+
+```bash
+WP_PATH=/www/wwwroot/yourdomain.com
+FILE=$WP_PATH/wp-content/plugins/mcp-adapter/includes/Autoloader.php
+
+# Backup
+sudo cp "$FILE" "$FILE.bak"
+
+# Apply patch: add ReflectionClass check before loaded_elsewhere_notice()
+sudo python3 <<'PY'
+path = "/www/wwwroot/yourdomain.com/wp-content/plugins/mcp-adapter/includes/Autoloader.php"
+# Replace WP_PATH above with your actual path
+with open(path) as f:
+    content = f.read()
+
+old = """		self::loaded_elsewhere_notice();
+		return true;
+	}"""
+
+new = """		// Check if the class was loaded from our own plugin directory.
+		// Without this check, the plugins_loaded recheck finds the class
+		// that was loaded by our own autoloader (false positive).
+		$ref = new \\ReflectionClass( Core\\McpAdapter::class );
+		$expected_dir = plugin_dir_path( __DIR__ );
+		$actual_file  = $ref->getFileName();
+		if ( is_string( $actual_file ) && strpos( $actual_file, $expected_dir ) === 0 ) {
+			return false;
+		}
+
+		self::loaded_elsewhere_notice();
+		return true;
+	}"""
+
+content = content.replace(old, new, 1)
+with open(path, "w") as f:
+    f.write(content)
+print("Patched Autoloader.php")
+PY
+
+# Verify syntax
+php -l "$FILE"
+```
+
+> **Warning:** This patch will be overwritten on plugin update. Check if the upstream fix has been merged before re-applying after an update.
+
 ---
 
 ## AI Engine (Path B)
