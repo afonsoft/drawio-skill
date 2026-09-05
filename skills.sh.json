@@ -34,6 +34,14 @@
       "skills": [
         "obsidian"
       ]
+    },
+    {
+      "title": "MCP Integrations",
+      "description": "Skills for configuring, authenticating, and using external MCP servers (Composio, NotebookLM).",
+      "skills": [
+        "composio-mcp",
+        "notebooklm-mcp"
+      ]
     }
   ]
 }

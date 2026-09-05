@@ -1,0 +1,376 @@
+---
+name: notebooklm-mcp
+description: Use when the user wants to use Google NotebookLM (Gemini Notebook) with an AI agent via the `nlm` CLI or the `notebooklm-mcp` MCP server, when `devin mcp list` / `claude mcp list` shows `notebooklm-mcp` failing to list tools, when `nlm login --check` fails with `ClientAuthenticationError`, when authenticating NotebookLM on a headless server without a browser, when extracting Google cookies manually or via an external CDP provider (OpenClaw), or when the user asks to configure/authenticate/use NotebookLM MCP. Covers cookie-based auth (manual file mode + OpenClaw CDP), MCP server setup across platforms, and the full `nlm` CLI command surface.
+license: MIT
+compatibility: Needs Python 3.10+ and `notebooklm-mcp-cli` (`uv tool install notebooklm-mcp-cli` or `pipx install notebooklm-mcp-cli`), providing the `nlm` and `notebooklm-mcp` binaries. Auto auth mode needs a Chromium-family browser (Chrome/Chromium/Brave/Edge/Arc) or Firefox installed. Headless servers use manual cookie file mode or an external CDP provider (OpenClaw). Works on macOS/Linux/Windows.
+metadata:
+  homepage: https://github.com/jacob-bd/notebooklm-mcp-cli
+  author: afonsoft
+  version: "1.0.0"
+  sources: https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/AUTHENTICATION.md, https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/MCP_GUIDE.md, https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/CLI_GUIDE.md, https://pypi.org/project/notebooklm-mcp-cli/
+---
+
+# NotebookLM (Gemini Notebook) — CLI + MCP
+
+Google NotebookLM has no official API. The `notebooklm-mcp-cli` package (`nlm` CLI + `notebooklm-mcp` server) authenticates by extracting **browser cookies** from a logged-in Google session and caching them. This skill covers the two headless-friendly auth methods and the MCP server wiring.
+
+| Path | Binary | Transport | When to use |
+|------|--------|-----------|-------------|
+| **A. CLI** | `nlm` | shell | Any agent with shell access. Full notebook/source/note/chat/studio management. |
+| **B. MCP** | `notebooklm-mcp` | stdio (or http/sse) | MCP-native agents (Claude Code, Cursor, Devin, Gemini CLI). Exposes ~30 tools (notebook_create, source_add, chat, audio, report…). |
+
+Both paths share the **same cookie cache** at `~/.notebooklm-mcp-cli/profiles/<profile>/auth.json`.
+
+## When to use
+
+- `devin mcp list` / `claude mcp list` shows `notebooklm-mcp` **failing to list tools**.
+- `nlm login --check` fails with `ClientAuthenticationError` or `network_error`.
+- `nlm doctor` reports "Browser: not found" (headless server).
+- The user wants to authenticate NotebookLM on a server without a desktop browser.
+- The user asks to configure the NotebookLM MCP server for Claude Code / Cursor / Devin / Gemini.
+- You need to extract Google cookies manually or via an external CDP endpoint.
+
+## When NOT to use
+
+- The user wants a generic "scrape Google docs" tool — NotebookLM is specifically for the NotebookLM product.
+- The user is on a desktop with Chrome installed — just run `nlm login` (auto mode); no skill needed.
+
+---
+
+# Install
+
+```bash
+# Option 1: uv (recommended)
+uv tool install notebooklm-mcp-cli
+
+# Option 2: pipx
+pipx install notebooklm-mcp-cli
+
+# Option 3: pip
+pip install --user notebooklm-mcp-cli
+```
+
+Verify:
+
+```bash
+nlm --version          # 0.9.x
+which nlm notebooklm-mcp
+```
+
+Run the diagnostic at any time:
+
+```bash
+nlm doctor             # checks install, auth, browser, AI-tool configs
+nlm doctor -v          # verbose
+```
+
+---
+
+# Authentication
+
+NotebookLM auth = Google browser cookies. There is no API key. Two methods work on headless servers:
+
+| Method | Command | Requires | Best for |
+|--------|---------|----------|----------|
+| **Manual file** | `nlm login --manual --file cookies.txt` | A `cookies.txt` file with raw Google cookies | One-time setup, no browser on the server, troubleshooting |
+| **OpenClaw CDP** | `nlm login --provider openclaw --cdp-url http://127.0.0.1:18800` | An OpenClaw-managed browser exposing CDP on the given URL | Servers that already run an OpenClaw browser session |
+
+> **Fallback order on headless boxes:** try OpenClaw CDP first (if a managed browser is running) → fall back to manual cookie file → fall back to running `nlm login` on a desktop with a browser and copying the resulting `auth.json`.
+
+## Method 1 — Manual cookie file
+
+### Step 1: Extract cookies on a machine with Chrome
+
+1. Open Chrome and go to **https://notebooklm.google.com**
+2. Make sure you are logged in to your Google account.
+3. Press **F12** (or **Cmd+Option+I** on Mac) to open DevTools.
+4. Click the **Network** tab.
+5. In the filter box, type: `batchexecute`
+6. Click on any notebook to trigger a request.
+7. Click on a `batchexecute` request in the list.
+8. In the right panel, scroll to **Request Headers**.
+9. Find the line starting with `cookie:`.
+10. Right-click the cookie **value** and select **Copy value**.
+11. Paste into a text file and save as `cookies.txt`.
+
+### Cookie file format
+
+The file should contain the raw cookie string from Chrome DevTools:
+
+```
+SID=abc123...; HSID=xyz789...; SSID=...; APISID=...; SAPISID=...; __Secure-1PSID=...; __Secure-3PSID=...; ...
+```
+
+- Lines starting with `#` are treated as comments and ignored.
+- The file can contain the cookie string on one or multiple lines.
+- A template `cookies.txt` is included in the repository.
+
+### Step 2: Import on the server
+
+```bash
+# Copy cookies.txt to the server, then:
+nlm login --manual --file cookies.txt
+
+# Or interactive mode (prompts for the file path):
+nlm login --manual
+```
+
+### Step 3: Verify
+
+```bash
+nlm login --check
+# ✓ Authenticated as user@example.com
+
+nlm doctor
+# Authentication: cookies present, CSRF token: yes, account: user@example.com
+```
+
+Tokens are cached at `~/.notebooklm-mcp-cli/profiles/default/auth.json`.
+
+## Method 2 — OpenClaw CDP provider
+
+If an OpenClaw-managed browser is already running and exposing a Chrome DevTools Protocol endpoint, `nlm` can read cookies from it without launching a second browser:
+
+```bash
+nlm login --provider openclaw --cdp-url http://127.0.0.1:18800
+```
+
+- Uses `suppress_origin=True` for websocket CDP commands to support managed endpoints that reject the default Origin header.
+- The browser must already be logged in to Google / NotebookLM.
+- Increase the DevTools timeout if the endpoint is slow: `nlm login --provider openclaw --cdp-url http://127.0.0.1:18800 --devtools-timeout 15`
+
+Verify the same way:
+
+```bash
+nlm login --check
+```
+
+## Method 3 — Auto mode (desktop with browser)
+
+On a desktop with Chrome/Chromium/Brave/Edge/Arc/Firefox installed:
+
+```bash
+nlm login              # launches a dedicated browser profile, you log in, cookies extracted
+```
+
+Prefer a specific browser:
+
+```bash
+nlm config set auth.browser chromium   # or brave, arc, edge, chrome, firefox, vivaldi, opera
+```
+
+## Multi-profile auth
+
+Multiple Google accounts are supported via named profiles:
+
+```bash
+nlm login --profile work
+nlm login --profile personal
+nlm login switch work
+nlm login profile list
+nlm login profile delete personal
+```
+
+The MCP server always uses the **active default profile**. Switching the default profile instantaneously switches the MCP server's Google account:
+
+```bash
+nlm login switch personal
+nlm config set auth.default_profile personal
+```
+
+## Auth lifecycle
+
+| Component | Duration | Refresh |
+|-----------|----------|---------|
+| Cookies | ~2-4 weeks | Auto-refresh via headless browser (if profile saved) |
+| CSRF token | minutes | Auto-refreshed on every request failure |
+| Session ID | session | Embedded in cookies |
+
+When cookies go stale:
+
+```bash
+nlm login --check        # reports stale/unverified
+nlm login                # re-extract (auto mode)
+nlm login --manual --file cookies.txt   # re-extract (manual mode)
+```
+
+---
+
+# PATH A — CLI usage
+
+```bash
+# Notebooks
+nlm notebook list
+nlm notebook create --title "My Notebook"
+nlm notebook get <notebook_id>
+nlm notebook delete <notebook_id>
+
+# Sources
+nlm source add <notebook_id> --url https://example.com/doc
+nlm source add <notebook_id> --file ./paper.pdf
+nlm source list <notebook_id>
+
+# Notes
+nlm note add <notebook_id> --text "My note"
+nlm note list <notebook_id>
+
+# Chat
+nlm chats start <notebook_id>
+nlm chats send <notebook_id> "Summarize the sources"
+
+# Audio overviews
+nlm audio create <notebook_id>
+nlm download <notebook_id> --artifact audio
+
+# Reports
+nlm report create <notebook_id> --topic "Key findings"
+
+# Research
+nlm research discover "climate adaptation strategies"
+
+# Batch + cross-notebook
+nlm batch <notebook_ids_file> --command "summarize"
+nlm cross query "find mentions of X across all notebooks"
+
+# Tags + labels
+nlm tag add <notebook_id> research
+nlm label add <notebook_id> source_1 priority
+
+# Sharing + export
+nlm share <notebook_id> --email collaborator@example.com
+nlm export <notebook_id> --format docs
+
+# Diagnostics
+nlm doctor
+nlm doctor auth-replay     # diagnose cookie replay vs browser-bound auth failures
+```
+
+---
+
+# PATH B — MCP server
+
+## B.1 Configure
+
+The easiest way is `nlm setup`:
+
+```bash
+nlm setup add claude-code       # Claude Code
+nlm setup add claude-desktop    # Claude Desktop
+nlm setup add gemini            # Gemini CLI
+nlm setup add github-copilot    # GitHub Copilot
+nlm setup add cursor            # Cursor
+nlm setup add windsurf          # Windsurf
+nlm setup add json              # Any other tool (interactive JSON generator)
+
+nlm setup list                  # show supported tools + their MCP config status
+```
+
+### Manual config (per platform)
+
+The server binary is `notebooklm-mcp` (stdio by default). Recommended server name: `gemini-notebook-mcp` (avoids clashing with legacy Gemini Notebook servers).
+
+| Platform | File | Server name |
+|----------|------|-------------|
+| Claude Code | `~/.claude.json` → `mcpServers` | `notebooklm-mcp` |
+| Claude Desktop | `claude_desktop_config.json` | `notebooklm-mcp` |
+| Cursor | `~/.cursor/mcp.json` | `notebooklm-mcp` |
+| VS Code / Copilot | `.vscode/mcp.json` | `notebooklm-mcp` |
+| OpenCode | `~/.opencode/config.json` | `notebooklm-mcp` |
+| Devin CLI | `~/.config/devin/mcp-servers.json` | `notebooklm-mcp` |
+| Gemini CLI | `~/.gemini/settings.json` | `notebooklm-mcp` |
+
+See **`references/mcp-config.md`** for the exact JSON blocks.
+
+### Transport options
+
+```bash
+notebooklm-mcp                          # stdio (default, for local agents)
+notebooklm-mcp --transport http --port 8000   # HTTP (for remote agents)
+notebooklm-mcp --transport sse  --port 8000   # SSE
+```
+
+Env vars:
+
+| Variable | Description |
+|----------|-------------|
+| `NOTEBOOKLM_MCP_TRANSPORT` | Transport type (stdio/http/sse) |
+| `NOTEBOOKLM_MCP_PORT` | HTTP/SSE port |
+| `NOTEBOOKLM_MCP_DEBUG` | Enable verbose logging |
+| `NOTEBOOKLM_HL` | Interface language / locale (e.g. `pt-BR`, `es-419`) |
+| `NOTEBOOKLM_QUERY_TIMEOUT` | Query timeout (seconds) |
+| `NOTEBOOKLM_BASE_URL` | Override base URL for Enterprise/Workspace |
+
+> **Remote MCP warning:** HTTP transport does not provide HTTPS, caller authentication, per-user NotebookLM accounts, or remote file transfer. Do not expose it publicly without a reverse proxy adding TLS + auth.
+
+## B.2 Verify
+
+After configuring, restart the agent. The MCP server exposes ~30 tools. Check from the agent:
+
+```
+mcp_list_tools("notebooklm-mcp")
+# Expect: notebook_create, notebook_list, source_add, source_list, chat_send,
+#         audio_create, report_create, refresh_auth, save_auth_tokens, ...
+```
+
+From the shell:
+
+```bash
+bash skills/notebooklm-mcp/scripts/verify_notebooklm.sh
+```
+
+## B.3 Auth tools exposed via MCP
+
+| Tool | Description |
+|------|-------------|
+| `refresh_auth` | Reload auth tokens from the cached profile |
+| `save_auth_tokens` | Save cookies (fallback method) |
+
+If MCP tool calls fail with auth errors, call `refresh_auth` first. If that fails, re-run `nlm login` on the host.
+
+---
+
+# Headless auth flow (decision diagram)
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ Is an OpenClaw browser running with CDP on 127.0.0.1:18800?    │
+│   YES → nlm login --provider openclaw --cdp-url http://...     │
+│   NO  ↓                                                        │
+│ Do you have a cookies.txt file (extracted on another machine)? │
+│   YES → nlm login --manual --file cookies.txt                  │
+│   NO  ↓                                                        │
+│ Can you run nlm login on a desktop with Chrome?                │
+│   YES → nlm login (auto mode) → copy auth.json to the server   │
+│         (cp ~/.notebooklm-mcp-cli/profiles/default/auth.json   │
+│            server:~/.notebooklm-mcp-cli/profiles/default/)     │
+│   NO  → cannot authenticate; NotebookLM needs Google cookies   │
+└────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# Troubleshooting
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| `nlm login --check` → `ClientAuthenticationError` | Cookies expired or invalid | Re-extract: `nlm login --manual --file cookies.txt` or `nlm login` |
+| `nlm doctor` → "Browser: not found" | Headless server, no Chrome | Use manual file mode or OpenClaw CDP (see Auth section) |
+| `nlm doctor` → "Headless auth: not available" | No saved browser profile | Run `nlm login` once on a desktop to save the profile, or use manual mode |
+| MCP tools fail with auth error | Cached cookies stale | Call `refresh_auth` MCP tool, or `nlm login` on the host |
+| `network_error` on `--check` | Cookies present but session dead | Re-login; saved credentials may still be valid but session expired |
+| Two Gemini Notebook servers configured | Tool name overlap confuses agents | Remove the legacy server; keep only `notebooklm-mcp` |
+| `nlm setup add <tool>` says "already configured" | Existing entry | `nlm setup remove <tool>` then re-add, or edit the config manually |
+| Cookie replay fails (browser-bound auth) | Google requires browser-bound session | Run `nlm doctor auth-replay` to diagnose; may need auto mode with a real browser |
+
+---
+
+# References
+
+- **`references/mcp-config.md`** — Full per-platform JSON config blocks.
+- **`references/auth-guide.md`** — Deep dive on cookie extraction, file format, multi-profile, OpenClaw CDP, and auth lifecycle.
+- **`scripts/verify_notebooklm.sh`** — Runs `nlm doctor` + `nlm login --check` + lists notebooks to confirm end-to-end.
+- **`scripts/extract_cookies_help.sh`** — Prints the step-by-step cookie extraction instructions for the user.
+- [Authentication guide (upstream)](https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/AUTHENTICATION.md)
+- [MCP guide (upstream)](https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/MCP_GUIDE.md)
+- [CLI guide (upstream)](https://github.com/jacob-bd/notebooklm-mcp-cli/blob/main/docs/CLI_GUIDE.md)
+- [PyPI](https://pypi.org/project/notebooklm-mcp-cli/)
