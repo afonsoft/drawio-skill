@@ -51,7 +51,13 @@ npx skills add afonsoft/skills
 ## 📣 Publicar em Diretórios de Skills
 
 ### SkillsLLM
-[SkillsLLM](https://skillsllm.com/) indexa skills open-source para Claude Code, Codex CLI e ChatGPT. Entre com GitHub e submeta este repositório através de [Submit a Skill](https://skillsllm.com/submit). Submissões são escaneadas por segurança antes da listagem.
+[SkillsLLM](https://skillsllm.com/) indexa skills open-source para Claude Code, Codex CLI e ChatGPT. O scraper descobre repos diariamente via GitHub topics (`claude-code`, `ai-agent`, `mcp-server`, `agent-skills`, `skill-md`) e arquivos `SKILL.md`. Para listar esta coleção:
+
+1. Entre com GitHub em [Submit a Skill](https://skillsllm.com/submit)
+2. Submeta a URL do repositório: `https://github.com/afonsoft/skills`
+3. O scraper valida, busca metadados, roda security scan (Semgrep + npm audit + pip-audit) e adiciona ao catálogo em 24 horas
+
+> **Nota:** A descoberta automática do SkillsLLM filtra repos com 100+ stars. A submissão manual via formulário contorna esse filtro — o repo é escaneado e listado independente do número de stars. Os topics e a descrição do GitHub já estão configurados para o scraper categorizar as skills corretamente.
 
 ### Awesome Skills
 [Awesome Skills](https://awesomeskill.ai/) descobre skills `SKILL.md` open-source do GitHub via seu **Awesome List Import**. Cada diretório `skills/<nome>/SKILL.md` vira uma listagem separada com slug `afonsoft-skills-<nome>`. Submeta a URL do repositório através do formulário **Submit a Skill** do site:
