@@ -88,16 +88,31 @@ npx -y @lobehub/market-cli login           # browser OAuth
 npx -y @lobehub/market-cli github connect  # verify GitHub ownership
 ```
 
-**Publish all skills:**
+**Publish all skills locally:**
 ```bash
-./publish-lobehub.sh          # publishes all 11 skills
+./publish-lobehub.sh          # publishes all skills
 ./publish-lobehub.sh --dry-run # preview without publishing
 ```
 
 **Publish a single skill:**
 ```bash
-npx -y @lobehub/market-cli skill publish --dir skills/<skill-name>
+npx -y @lobehub/market-cli skill publish --dir skills/<skill-name> --identifier afonsoft-skills-<skill-name>
 ```
+
+**Automatic publishing via GitHub Actions:**
+
+A workflow (`.github/workflows/lobehub-publish.yml`) publishes all skills on every push to `main`. To enable it, add two repository secrets:
+
+1. **`LOBEHUB_M2M_CREDENTIALS`** — contents of `~/.lobehub-market/credentials.json` (device registration)
+2. **`LOBEHUB_USER_CREDENTIALS`** — contents of `~/.lobehub-market/user-credentials.json` (OAuth tokens)
+
+```bash
+# After running lhm login + lhm github connect locally:
+gh secret set LOBEHUB_M2M_CREDENTIALS < ~/.lobehub-market/credentials.json
+gh secret set LOBEHUB_USER_CREDENTIALS < ~/.lobehub-market/user-credentials.json
+```
+
+The workflow restores both credential files, verifies auth, then runs `./publish-lobehub.sh`. The refresh token auto-renews the access token, so the workflow stays authenticated across runs.
 
 After publishing, skills appear at `market.lobehub.com/s/skills/afonsoft-skills-<name>` and are searchable at [lobehub.com/skills?q=afonsoft](https://lobehub.com/skills?q=afonsoft).
 

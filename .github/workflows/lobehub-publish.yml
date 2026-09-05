@@ -1,0 +1,71 @@
+name: Publish to LobeHub
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: lobehub-publish
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Publish skills to LobeHub Marketplace
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Restore LobeHub credentials
+        run: |
+          mkdir -p ~/.lobehub-market
+          chmod 700 ~/.lobehub-market
+
+          # M2M credentials (device registration)
+          if [ -z "${{ secrets.LOBEHUB_M2M_CREDENTIALS }}" ]; then
+            echo "::error::Secret LOBEHUB_M2M_CREDENTIALS is not set. See publish-lobehub.sh header for setup."
+            exit 1
+          fi
+          printf '%s' '${{ secrets.LOBEHUB_M2M_CREDENTIALS }}' > ~/.lobehub-market/credentials.json
+          chmod 600 ~/.lobehub-market/credentials.json
+
+          # User credentials (OAuth tokens — accessToken + refreshToken)
+          if [ -z "${{ secrets.LOBEHUB_USER_CREDENTIALS }}" ]; then
+            echo "::error::Secret LOBEHUB_USER_CREDENTIALS is not set. Run 'lhm login' locally, then copy ~/.lobehub-market/user-credentials.json into this secret."
+            exit 1
+          fi
+          printf '%s' '${{ secrets.LOBEHUB_USER_CREDENTIALS }}' > ~/.lobehub-market/user-credentials.json
+          chmod 600 ~/.lobehub-market/user-credentials.json
+
+      - name: Verify auth
+        run: |
+          npx -y @lobehub/market-cli auth status --output json | python3 -c "
+          import sys, json
+          d = json.load(sys.stdin)
+          m2m = d.get('m2m', {}).get('status')
+          user = d.get('user', {}).get('status')
+          print(f'M2M: {m2m}')
+          print(f'User: {user}')
+          if m2m != 'authenticated':
+              print('::error::M2M not authenticated — check LOBEHUB_M2M_CREDENTIALS secret')
+              sys.exit(1)
+          if user != 'authenticated':
+              print('::error::User not authenticated — check LOBEHUB_USER_CREDENTIALS secret (accessToken may have expired, refreshToken should auto-refresh)')
+              sys.exit(1)
+          print('Both M2M and User authenticated.')
+          "
+
+      - name: Publish all skills
+        run: ./publish-lobehub.sh
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## LobeHub Publish Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Skills are searchable at https://lobehub.com/skills?q=afonsoft" >> $GITHUB_STEP_SUMMARY
