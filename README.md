@@ -15,7 +15,7 @@ This repository provides specialized guidance and tools following the **Agent Sk
 
 ## 🛠️ Skill Catalog & Correlation
 
-The skills are organized into three main pillars: **Harness Engineering**, **Code Quality**, and **Extensibility**.
+The skills are organized into four main pillars: **Harness Engineering**, **Code Quality**, **Extensibility**, and **MCP Integrations**.
 
 ### 🏗️ Harness Engineering
 *Foundation for creating and managing AI agents.*
@@ -32,6 +32,11 @@ The skills are organized into three main pillars: **Harness Engineering**, **Cod
 *Expanding what the agent can actually do.*
 - **`building-mcp-servers`**: The power-user tool. Teaches agents how to build their own Model Context Protocol (MCP) servers to connect to any API or database.
 - **`drawio-architecture`**: Visual intelligence. Merges architecture diagram authoring with the official draw.io MCP server for automated system design.
+
+### 🔗 MCP Integrations
+*Configuring, authenticating, and using external MCP servers.*
+- **`composio-mcp`**: Connects AI agents to 1000+ external apps (Gmail, GitHub, Slack, Notion, Linear, Jira) via Composio. CLI-first path (`ak_*` project key) with MCP fallback (`ck_*` consumer key via `x-consumer-api-key` header). Includes setup and verify scripts, per-platform config reference, and troubleshooting for the `ck_` vs `ak_` auth boundary.
+- **`notebooklm-mcp`**: Google NotebookLM (Gemini Notebook) integration via the `nlm` CLI and `notebooklm-mcp` server. Cookie-based auth for headless servers with two methods (OpenClaw CDP provider + manual `cookies.txt` file) and a desktop auto-mode fallback. Includes verify and cookie-extraction helper scripts, plus per-platform MCP config reference.
 
 ---
 
